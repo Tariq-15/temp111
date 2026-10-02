@@ -6,6 +6,8 @@
 **Supervisor:** Dr. Md. Golam Rabiul Alam, Professor, Department of CSE, Brac University
 **Degree:** B.Sc. in Computer Science and Engineering, Brac University, October 2026
 
+**Read it as a website: https://tariq-15.github.io/temp111/** (sidebar navigation, rendered equations and diagrams, click-to-zoom figures, dark mode).
+
 This repository explains the whole thesis with figures. You should be able to understand it, explain it and defend it without opening the 109-page PDF. Every number here was copied from the final thesis source (chapters, tables and figure captions). Where this guide names a table or figure, it uses the thesis numbering (for example "Table 5.6") so you can find it in the PDF.
 
 ![The thesis in eight numbers](figures/summary/00_thesis_at_a_glance.png)
@@ -106,7 +108,11 @@ figures/
 tools/
   make_summary_charts.py     ← rebuilds figures/summary (all numbers cited to thesis tables)
   tikz_figures.tex           ← the 4 TikZ figures, copied verbatim from the thesis source
+  build_site.py              ← turns README + docs into the website (site_assets/ holds its CSS and JS)
+.github/workflows/site.yml   ← rebuilds and republishes the website on every push to main
 ```
+
+**Website:** every push to `main` rebuilds the site and publishes it to the `gh-pages` branch, which GitHub Pages serves. To preview it locally, run `pip install markdown-it-py mdit-py-plugins`, then `python tools/build_site.py`, then open `_site/index.html` through any local web server.
 
 **Figure count:** 23 thesis figures + 4 TikZ + 38 flowcharts + 10 summary charts = **75 figures**, plus Mermaid diagrams drawn directly in the chapters.
 
