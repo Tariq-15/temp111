@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The big picture | CP-FIM thesis study guide</title>
+<meta name="description" content="Illustrated study guide for the BRAC University thesis on selective unlearning for temporal regression (CP-FIM).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%272%27 y=%274%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3Crect x=%277%27 y=%2712%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%232a78d6%27/%3E%3Crect x=%2712%27 y=%2720%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+options:{ignoreHtmlClass:'mermaid'},chtml:{scale:0.98}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="side" id="side">
+  <a class="brand" href="../index.html">CP-FIM thesis<br><span>study guide</span></a>
+  <nav aria-label="Chapters"><a class="side-home" href="../index.html">Overview</a><ol><li><a href="../docs/01_big_picture.html" class="active" aria-current="page"><span class="n">1</span>The big picture</a></li><li><a href="../docs/02_background_and_literature.html"><span class="n">2</span>Background and literature</a></li><li><a href="../docs/03_data_and_deletion.html"><span class="n">3</span>Data and deletion requests</a></li><li><a href="../docs/04_models_and_training.html"><span class="n">4</span>Forecasting models, training regimes and the experiment grid</a></li><li><a href="../docs/05_cpfim_method.html"><span class="n">5</span>CP-FIM: the proposed method</a></li><li><a href="../docs/06_comparison_methods.html"><span class="n">6</span>Comparison methods, design alternatives and ablations</a></li><li><a href="../docs/07_evaluation_metrics.html"><span class="n">7</span>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></li><li><a href="../docs/08_results.html"><span class="n">8</span>Results</a></li><li><a href="../docs/09_fixes_statistics_robustness.html"><span class="n">9</span>Issues found and fixed, statistics and robustness</a></li><li><a href="../docs/10_conclusion_and_impact.html"><span class="n">10</span>Conclusion, contributions, limitations, future work and impact</a></li><li><a href="../docs/11_cheat_sheet.html"><span class="n">11</span>Cheat sheet: every key number, formula and term on one page</a></li><li><a href="../docs/12_viva_questions.html"><span class="n">12</span>Viva / defence Q&amp;A</a></li><li><a href="../docs/13_figure_atlas.html"><span class="n">13</span>Figure atlas: every figure in this repository</a></li></ol></nav>
+  <div class="side-foot">
+    <button type="button" class="theme" id="theme" aria-pressed="false">Dark mode</button>
+    <a href="https://github.com/Tariq-15/temp111">Source on GitHub</a>
+  </div>
+</aside>
+<div class="main-wrap">
+  <div class="topbar">
+    <button type="button" class="menu" id="menu" aria-controls="side" aria-expanded="false">Chapters</button>
+    <a class="top-brand" href="../index.html">CP-FIM thesis study guide</a>
+  </div>
+  <main id="main" class="content">
+  <div class="strip"><svg class="windows" viewBox="-2 -2 656 123" role="navigation" aria-label="Chapters, drawn as overlapping sliding windows"><line class="axis" x1="0" y1="105" x2="652" y2="105"/><line class="tick" x1="0" y1="102" x2="0" y2="108"/><line class="tick" x1="22" y1="102" x2="22" y2="108"/><line class="tick" x1="44" y1="102" x2="44" y2="108"/><line class="tick" x1="66" y1="102" x2="66" y2="108"/><line class="tick" x1="88" y1="102" x2="88" y2="108"/><line class="tick" x1="110" y1="102" x2="110" y2="108"/><line class="tick" x1="132" y1="102" x2="132" y2="108"/><line class="tick" x1="154" y1="102" x2="154" y2="108"/><line class="tick" x1="176" y1="102" x2="176" y2="108"/><line class="tick" x1="198" y1="102" x2="198" y2="108"/><line class="tick" x1="220" y1="102" x2="220" y2="108"/><line class="tick" x1="242" y1="102" x2="242" y2="108"/><line class="tick" x1="264" y1="102" x2="264" y2="108"/><line class="tick" x1="286" y1="102" x2="286" y2="108"/><line class="tick" x1="308" y1="102" x2="308" y2="108"/><line class="tick" x1="330" y1="102" x2="330" y2="108"/><line class="tick" x1="352" y1="102" x2="352" y2="108"/><line class="tick" x1="374" y1="102" x2="374" y2="108"/><line class="tick" x1="396" y1="102" x2="396" y2="108"/><line class="tick" x1="418" y1="102" x2="418" y2="108"/><line class="tick" x1="440" y1="102" x2="440" y2="108"/><line class="tick" x1="462" y1="102" x2="462" y2="108"/><line class="tick" x1="484" y1="102" x2="484" y2="108"/><line class="tick" x1="506" y1="102" x2="506" y2="108"/><line class="tick" x1="528" y1="102" x2="528" y2="108"/><line class="tick" x1="550" y1="102" x2="550" y2="108"/><line class="tick" x1="572" y1="102" x2="572" y2="108"/><line class="tick" x1="594" y1="102" x2="594" y2="108"/><line class="tick" x1="616" y1="102" x2="616" y2="108"/><line class="tick" x1="638" y1="102" x2="638" y2="108"/><a href="01_big_picture.html" class="win current" aria-label="Chapter 1: The big picture" aria-current="page"><title>1. The big picture</title><rect x="0" y="0" width="124" height="26" rx="6"/><text x="12" y="17.5">1<tspan class="lbl" dx="8">Big picture</tspan></text></a><a href="02_background_and_literature.html" class="win " aria-label="Chapter 2: Background and literature"><title>2. Background and literature</title><rect x="44" y="33" width="124" height="26" rx="6"/><text x="56" y="50.5">2<tspan class="lbl" dx="8">Literature</tspan></text></a><a href="03_data_and_deletion.html" class="win " aria-label="Chapter 3: Data and deletion requests"><title>3. Data and deletion requests</title><rect x="88" y="66" width="124" height="26" rx="6"/><text x="100" y="83.5">3<tspan class="lbl" dx="8">Data</tspan></text></a><a href="04_models_and_training.html" class="win " aria-label="Chapter 4: Forecasting models, training regimes and the experiment grid"><title>4. Forecasting models, training regimes and the experiment grid</title><rect x="132" y="0" width="124" height="26" rx="6"/><text x="144" y="17.5">4<tspan class="lbl" dx="8">Models</tspan></text></a><a href="05_cpfim_method.html" class="win " aria-label="Chapter 5: CP-FIM: the proposed method"><title>5. CP-FIM: the proposed method</title><rect x="176" y="33" width="124" height="26" rx="6"/><text x="188" y="50.5">5<tspan class="lbl" dx="8">CP-FIM</tspan></text></a><a href="06_comparison_methods.html" class="win " aria-label="Chapter 6: Comparison methods, design alternatives and ablations"><title>6. Comparison methods, design alternatives and ablations</title><rect x="220" y="66" width="124" height="26" rx="6"/><text x="232" y="83.5">6<tspan class="lbl" dx="8">Methods</tspan></text></a><a href="07_evaluation_metrics.html" class="win " aria-label="Chapter 7: Evaluation metrics: how &quot;unlearning worked?&quot; is measured"><title>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</title><rect x="264" y="0" width="124" height="26" rx="6"/><text x="276" y="17.5">7<tspan class="lbl" dx="8">Metrics</tspan></text></a><a href="08_results.html" class="win " aria-label="Chapter 8: Results"><title>8. Results</title><rect x="308" y="33" width="124" height="26" rx="6"/><text x="320" y="50.5">8<tspan class="lbl" dx="8">Results</tspan></text></a><a href="09_fixes_statistics_robustness.html" class="win " aria-label="Chapter 9: Issues found and fixed, statistics and robustness"><title>9. Issues found and fixed, statistics and robustness</title><rect x="352" y="66" width="124" height="26" rx="6"/><text x="364" y="83.5">9<tspan class="lbl" dx="8">Fixes, stats</tspan></text></a><a href="10_conclusion_and_impact.html" class="win " aria-label="Chapter 10: Conclusion, contributions, limitations, future work and impact"><title>10. Conclusion, contributions, limitations, future work and impact</title><rect x="396" y="0" width="124" height="26" rx="6"/><text x="408" y="17.5">10<tspan class="lbl" dx="8">Conclusion</tspan></text></a><a href="11_cheat_sheet.html" class="win " aria-label="Chapter 11: Cheat sheet: every key number, formula and term on one page"><title>11. Cheat sheet: every key number, formula and term on one page</title><rect x="440" y="33" width="124" height="26" rx="6"/><text x="452" y="50.5">11<tspan class="lbl" dx="8">Cheat sheet</tspan></text></a><a href="12_viva_questions.html" class="win " aria-label="Chapter 12: Viva / defence Q&amp;A"><title>12. Viva / defence Q&amp;A</title><rect x="484" y="66" width="124" height="26" rx="6"/><text x="496" y="83.5">12<tspan class="lbl" dx="8">Viva Q&amp;A</tspan></text></a><a href="13_figure_atlas.html" class="win " aria-label="Chapter 13: Figure atlas: every figure in this repository"><title>13. Figure atlas: every figure in this repository</title><rect x="528" y="0" width="124" height="26" rx="6"/><text x="540" y="17.5">13<tspan class="lbl" dx="8">Figures</tspan></text></a></svg></div><header class="chapter-head"><p class="chapter-num">Chapter 1 of 13</p><h1>The big picture</h1><p class="chapter-sub">Thesis Chapter 1 (Introduction)</p></header>
+  <h2 id="11-what-is-machine-unlearning">1.1 What is machine unlearning? <a class="header-anchor" href="#11-what-is-machine-unlearning">#</a></h2>
+<p>Models are trained on personal, commercial and sensitive data. <strong>After training, the model keeps traces of that data in its weights.</strong> Deleting a row from a database does not remove those traces. Laws such as the EU GDPR (Article 17, &quot;right to erasure&quot;) give people the right to ask for their data to be removed. Data owners may also need to remove wrong, poisoned or unusual records from a model that is already in use.</p>
+<p><strong>Machine unlearning</strong> = removing the influence of chosen training data from a trained model.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math">\(D\)</span></td>
+<td>training set</td>
+<td>everything the model was trained on</td>
+</tr>
+<tr>
+<td><span class="math">\(D_f\)</span></td>
+<td><strong>forget set</strong></td>
+<td>the part that must be removed</td>
+</tr>
+<tr>
+<td><span class="math">\(D_r = D \setminus D_f\)</span></td>
+<td><strong>retain set</strong></td>
+<td>everything that stays</td>
+</tr>
+<tr>
+<td><span class="math">\(\theta_0\)</span></td>
+<td><strong>original model</strong> (teacher)</td>
+<td>trained on all of <span class="math">\(D\)</span></td>
+</tr>
+<tr>
+<td><span class="math">\(\theta_r\)</span></td>
+<td><strong>oracle</strong> (retrained model)</td>
+<td>trained from scratch on <span class="math">\(D_r\)</span> only, the gold standard</td>
+</tr>
+<tr>
+<td><span class="math">\(\theta_u\)</span></td>
+<td><strong>unlearned model</strong> (student)</td>
+<td>the result of an approximate unlearning method</td>
+</tr>
+</tbody>
+</table></div>
+<p>There are two routes:</p>
+<figure><a class="zoom" href="../figures/thesis/methodology/02_exact_and_approximate_unlearning.png"><img loading="lazy" src="../figures/thesis/methodology/02_exact_and_approximate_unlearning.png" alt="Exact and approximate unlearning" /></a><figcaption>Thesis Fig 1.1. Exact unlearning retrains on the retain set and gives the reference (the oracle). Approximate unlearning edits the existing model, which is cheaper.</figcaption></figure>
+<ol>
+<li><strong>Exact unlearning (retraining).</strong> Train a brand-new model on <span class="math">\(D_r\)</span> only. It is correct by definition, but it costs a full training run every time someone asks for deletion. Note: the oracle may still infer <em>similar</em> information from correlated retained data. It excludes the examples; it is not a privacy certificate.</li>
+<li><strong>Approximate unlearning.</strong> Start from the original model and change it a little: extra gradient steps, noise, parameter masking and so on. It is cheaper, but it has to be checked against the oracle.</li>
+</ol>
+<h2 id="12-the-key-idea-match-retraining-not-be-as-wrong-as-possible">1.2 The key idea: &quot;match retraining&quot;, not &quot;be as wrong as possible&quot; <a class="header-anchor" href="#12-the-key-idea-match-retraining-not-be-as-wrong-as-possible">#</a></h2>
+<p>The standard definition (Guo et al. 2020; Sekhari et al. 2021) says that an unlearned model should be <strong>indistinguishable from a retrained model</strong>. This idea runs through the whole thesis:</p>
+<blockquote>
+<p>A method that makes the model <em>very wrong</em> on the forget set is <strong>not</strong> doing better unlearning. A retrained model is usually <em>not</em> very wrong on data that looks like its training data. A very-wrong model is also easy to spot. Golatkar et al. call this the <strong>Streisand effect</strong>: deleting the data makes it <em>more</em> noticeable.</p>
+</blockquote>
+<figure><a class="zoom" href="../figures/tikz/three_outcomes_of_unlearning.png"><img loading="lazy" src="../figures/tikz/three_outcomes_of_unlearning.png" alt="Three outcomes of unlearning" /></a><figcaption>Thesis Fig 1.2. The three possible outcomes. The goal is the green middle zone: behave like the retrained model.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>What happens</th>
+<th>Which methods did this in our experiment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Under-forgetting</strong></td>
+<td>the model still behaves like the original</td>
+<td>CP-FIM, retain fine-tuning, Fisher noise + FT, SCRUB-style, Contrast-FIM</td>
+</tr>
+<tr>
+<td><strong>Match</strong></td>
+<td>the model behaves like the retrained one</td>
+<td>the target; <em>no method fully reached it</em></td>
+</tr>
+<tr>
+<td><strong>Over-forgetting</strong></td>
+<td>forget error far above retraining; detectable; test accuracy often damaged</td>
+<td>direct-noise (TS-Unlearn-inspired), retain label, max loss, gradient ascent</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="13-why-forecasting-makes-unlearning-harder">1.3 Why forecasting makes unlearning harder <a class="header-anchor" href="#13-why-forecasting-makes-unlearning-harder">#</a></h2>
+<p><strong>Time-series forecasting</strong> = predicting future values from past values, for example tomorrow's S&amp;P 500 close or the next 96 hours of transformer load. The outputs are real numbers, so it is <strong>regression</strong>. Because the inputs are ordered in time, it is called <strong>temporal regression</strong>.</p>
+<p>A forecaster is trained on <strong>sliding windows</strong>. Each window has <span class="math">\(L\)</span> past values (input) and the next <span class="math">\(H\)</span> values (target). Windows are cut every <span class="math">\(s\)</span> steps (the stride).</p>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    Series[&quot;Raw time series&lt;br/&gt;z1, z2, z3, …, zT&quot;]
+    Series --&gt; W1[&quot;Window 1: steps 1–192&quot;]
+    Series --&gt; W2[&quot;Window 2: steps 5–196&quot;]
+    Series --&gt; W3[&quot;Window 3: steps 9–200&quot;]
+    W1 -.-|&quot;share 188 of 192 steps, about 98%&quot;| W2
+    W2 -.-|&quot;share 188 of 192 steps&quot;| W3
+</pre></div>
+<p>Two problems follow:</p>
+<ol>
+<li><strong>Continuous outputs.</strong> In classification you can check whether &quot;forget accuracy dropped to zero&quot;. In regression there is no &quot;wrong class&quot;, so you need a different yardstick. The thesis uses <em>distance to the retrained model's forecasts</em>.</li>
+<li><strong>Overlapping windows.</strong> With a 192-step window and stride 4, neighbouring windows share <strong>188 steps (about 98%)</strong>. Delete one window and its data is still in its neighbours. To truly delete an observation, you must delete <strong>every window that touches it</strong>. The thesis calls this <strong>dependency closure</strong>.</li>
+</ol>
+<figure><a class="zoom" href="../figures/thesis/methodology/07_sliding_window_dependencies.png"><img loading="lazy" src="../figures/thesis/methodology/07_sliding_window_dependencies.png" alt="Dependency span of a window" /></a><figcaption>Thesis Fig 4.3. A window's &quot;span&quot; = extra feature history (for example the history a moving average needs) + input window + forecast target. If any deleted time step falls inside the span, the window must go.</figcaption></figure>
+<p><strong>Consequence:</strong> if a deletion request only removes <em>randomly chosen windows</em>, almost all of the raw observations stay in the training data through the neighbouring windows. Every unlearning method can then look better than it really is. This is a central finding (see <a href="08_results.html#finding-2-random-window-deletion-removes-almost-nothing-unique">Results</a>).</p>
+<h2 id="14-motivation-why-this-thesis-exists">1.4 Motivation (why this thesis exists) <a class="header-anchor" href="#14-motivation-why-this-thesis-exists">#</a></h2>
+<ul>
+<li><strong>Forecasting is everywhere and often sensitive.</strong> Smart-meter data can show when a family is at home. Trading data can reveal a company's strategy. Membership attacks on forecasters have been shown to work (Johansson et al. 2025).</li>
+<li><strong>Unusual periods distort financial models.</strong> The project started from finance. Crisis periods such as the COVID-19 crash or the 2022 bear market may need to be removed from a trained model.</li>
+<li><strong>Regression unlearning is under-studied.</strong> Most work is on image classifiers with independent examples.</li>
+<li><strong>Deciding whether unlearning worked is hard.</strong> The first forecasting-specific method, <strong>TS-Unlearn</strong> (Wang et al. 2026), judges success by how <em>large</em> the forget error gets, and it tests only random-window deletion. That conflicts with the &quot;match retraining&quot; definition.</li>
+<li><strong>Aggressive methods can break the model.</strong> Gradient ascent and random targets can push error up on <em>all</em> data. In a deployed forecaster, a model that suddenly forecasts badly is worse than one that forgets slowly.</li>
+</ul>
+<p>→ This motivates <strong>CP-FIM</strong>, a <em>stable</em> method, and a careful <strong>retrain-referenced evaluation</strong>.</p>
+<h2 id="15-problem-statement">1.5 Problem statement <a class="header-anchor" href="#15-problem-statement">#</a></h2>
+<p>Given a trained temporal regression model and a request to remove some training data, produce an updated model that:</p>
+<ol>
+<li><strong>behaves as if the requested data had never been used</strong> (close to the oracle);</li>
+<li><strong>keeps useful forecasting performance</strong> on retained and future data;</li>
+<li><strong>costs less than full retraining.</strong></li>
+</ol>
+<p>Four challenges make this hard:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Challenge</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Ambiguous deletion units</td>
+<td>One observation sits in many windows. &quot;Delete&quot; must say whether it means a window or a time stamp.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Incomplete evidence from one measure</td>
+<td>Forget error alone proves nothing. Compare with retraining, account for seed noise, and check retain, test and a membership signal.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Removal versus retained utility</td>
+<td>Push too hard and you damage forecasting. Push too little and nothing changes.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Uncertain agreement with retraining</td>
+<td>Most methods were designed for classifiers. Check them against retraining on continuous, overlapping data.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="16-objectives">1.6 Objectives <a class="header-anchor" href="#16-objectives">#</a></h2>
+<ol>
+<li>Build a complete, repeatable pipeline for evaluating unlearning in forecasting (financial + ETT).</li>
+<li>Design and evaluate a <strong>stable</strong> method, <strong>CP-FIM</strong>.</li>
+<li>Compare CP-FIM with retraining, doing nothing, a TS-Unlearn-inspired direct-noise method and other approximate methods under the same settings.</li>
+<li>Study how <strong>deletion settings</strong> (random windows, block windows, time stamps) change what is measured.</li>
+<li>Use <strong>several measures</strong> (agreement with retraining, forecast error, membership test) and check whether they agree.</li>
+<li>Study CP-FIM's <strong>stability</strong>.</li>
+<li>Run <strong>ablations</strong> and <strong>update-matched controls</strong> to see which parts matter.</li>
+<li>State the strengths, weaknesses and limits clearly.</li>
+</ol>
+<h2 id="17-the-six-research-questions-and-their-answers">1.7 The six research questions and their answers <a class="header-anchor" href="#17-the-six-research-questions-and-their-answers">#</a></h2>
+<div class="diagram"><pre class="mermaid">flowchart TB
+    subgraph Deletion[&quot;About the deletion request&quot;]
+      RQ1[&quot;RQ1: Does the deletion unit and shape&lt;br/&gt;change the measurable effect?&quot;]
+      RQ2[&quot;RQ2: Which measures detect unlearning,&lt;br/&gt;and do they agree?&quot;]
+    end
+    subgraph Methods[&quot;About the methods&quot;]
+      RQ3[&quot;RQ3: Do approximate methods&lt;br/&gt;reproduce retraining?&quot;]
+      RQ4[&quot;RQ4: Is CP-FIM more stable and closer to&lt;br/&gt;retraining than direct noise / aggressive methods?&quot;]
+      RQ5[&quot;RQ5: Is CP-FIM closer than doing nothing&lt;br/&gt;and retain fine-tuning?&quot;]
+    end
+    subgraph Validity[&quot;About the evidence&quot;]
+      RQ6[&quot;RQ6: Are the financial forecasters&lt;br/&gt;good enough to trust the results?&quot;]
+    end
+    Deletion --&gt; Methods --&gt; Validity
+</pre></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>RQ</th>
+<th>Answer (thesis Table 5.21)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RQ1</strong></td>
+<td><strong>The deletion protocol matters a lot.</strong> Random-window deletion removes almost no unique information and usually changes the model no more than a new seed does. Block and time-stamp deletion remove much more and have clear effects.</td>
+</tr>
+<tr>
+<td><strong>RQ2</strong></td>
+<td><strong>The measures disagree.</strong> Prediction agreement detects effects under standard training that the loss test cannot see. Under high-capacity training both detect them.</td>
+</tr>
+<tr>
+<td><strong>RQ3</strong></td>
+<td><strong>No approximate method reproduces retraining.</strong> Gentle methods under-forget. Aggressive methods over-forget, become detectable and damage accuracy.</td>
+</tr>
+<tr>
+<td><strong>RQ4</strong></td>
+<td><strong>Yes.</strong> CP-FIM is closer to retraining than the direct-noise adaptation in <strong>56/56 settings (310/312 runs)</strong> and than all five aggressive methods in <strong>56/56</strong>, while its test error stays within <strong>−1.8% to +4.4%</strong> in every run.</td>
+</tr>
+<tr>
+<td><strong>RQ5</strong></td>
+<td><strong>No.</strong> CP-FIM beats doing nothing in only <strong>22/56</strong> settings; retain fine-tuning is closer in <strong>41/56</strong>. Its forget target keeps the teacher on average.</td>
+</tr>
+<tr>
+<td><strong>RQ6</strong></td>
+<td><strong>No.</strong> The financial price-level models are much worse than persistence. A scale-free daily-change target reached roughly persistence level in a small pilot.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The flowchart below maps each question to the evidence that answers it:</p>
+<figure><a class="zoom" href="../figures/flowcharts/03_research_questions_to_evidence.png"><img loading="lazy" src="../figures/flowcharts/03_research_questions_to_evidence.png" alt="Research questions to evidence" /></a></figure>
+<h2 id="18-methodology-in-brief-10-steps">1.8 Methodology in brief (10 steps) <a class="header-anchor" href="#18-methodology-in-brief-10-steps">#</a></h2>
+<figure><a class="zoom" href="../figures/thesis/methodology/01_complete_research_workflow.png"><img loading="lazy" src="../figures/thesis/methodology/01_complete_research_workflow.png" alt="Complete research workflow" /></a><figcaption>Thesis Fig 1.3. The ten-stage research workflow.</figcaption></figure>
+<ol>
+<li><strong>Collect datasets.</strong> 4 financial (2010–2024) + 4 ETT, with checks on values, dates and series identities.</li>
+<li><strong>Prepare temporal examples.</strong> Scale on a public early prefix, keep calendar order, cut windows, purge windows that cross split boundaries, and reserve held-out non-member windows for the attack.</li>
+<li><strong>Specify deletion units.</strong> Finance: 5 crisis periods by time stamp. ETT: random windows (20%), block windows (20%), time stamps (20% of raw steps + all dependent windows).</li>
+<li><strong>Train original forecasters.</strong> LSTM / GRU / BiLSTM / CNN-LSTM for finance, PatchTST for ETT, standard and high-capacity regimes, 3 seeds.</li>
+<li><strong>Retraining reference.</strong> For each request, train an oracle from scratch on the retained data, plus a <strong>second oracle</strong> with another seed to measure natural seed variation.</li>
+<li><strong>Apply unlearning methods.</strong> CP-FIM + 10 comparison methods + 15 ablations + 5 update-matched controls, all starting from the same original model.</li>
+<li><strong>Check base forecasters.</strong> Compare the original test error with a last-value <strong>persistence</strong> forecast.</li>
+<li><strong>Measure deletion and utility.</strong> Prediction disagreement on forget, retain and test windows; forecast error; deletion signal ratio; loss-attack AUC; cost; stability.</li>
+<li><strong>Analyse paired outcomes.</strong> Same seed, same request; by dataset, architecture, regime and protocol; plus ablations and controls.</li>
+<li><strong>Report limitations.</strong> Stability is not forgetting; disclose the attention-dropout defect; qualify the finance results.</li>
+</ol>
+<h2 id="19-scope-what-is-in-and-out">1.9 Scope (what is in and out) <a class="header-anchor" href="#19-scope-what-is-in-and-out">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>In scope</th>
+<th>Out of scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Model-level</strong> unlearning for forecasting models</td>
+<td>Deleting raw data files; the fixed public scaling step</td>
+</tr>
+<tr>
+<td>8 datasets, 5 model types, 2 regimes</td>
+<td>Arbitrary forecasting systems or much larger models</td>
+</tr>
+<tr>
+<td>Offline unlearning: the request arrives after training</td>
+<td>Detecting automatically <em>what</em> should be deleted</td>
+</tr>
+<tr>
+<td>Known deletion periods / requests</td>
+<td>Crisis or event detection systems</td>
+</tr>
+<tr>
+<td>Agreement with retraining, error, skill vs persistence, loss-attack, stability, cost</td>
+<td>Formal privacy certificates and strong shadow-model attacks</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Challenges named in the thesis:</strong> overlapping windows · randomness in retraining (two oracles disagree) · limits of membership testing (&quot;no signal&quot; ≠ &quot;no memory&quot;) · difficulty of price-level forecasting · different deletion settings · measures that disagree · large experimental cost (≈74 GPU-hours) · software issues (the attention-dropout defect) · known deletion requests only.</p>
+<hr />
+<h3 id="check-yourself">Check yourself <a class="header-anchor" href="#check-yourself">#</a></h3>
+<details><summary>Why is a high forget error not proof of good unlearning?</summary>
+<p>Because the target is the <em>retrained</em> model. A retrained model usually forecasts the forget windows reasonably well, since they look like its training data. A much higher error means <strong>over-forgetting</strong>. It is detectable (membership AUC drops <em>below</em> the oracle's) and it usually damages test accuracy too.</p>
+</details>
+<details><summary>What is dependency closure in one sentence?</summary>
+<p>When a raw time step is deleted, every training window whose span (feature history + input + target) contains that time step must also be deleted.</p>
+</details>
+<details><summary>What are the three reference points every result is read against?</summary>
+<p>The <strong>oracle</strong> (retrained model, the target), the <strong>original model</strong> (doing nothing, the lower reference) and the <strong>retrain variation</strong> (how much two oracles with different seeds disagree, the natural noise floor).</p>
+</details>
+
+  <nav class="prevnext" aria-label="Chapter navigation"><a class="pn prev" href="../index.html"><span>Previous</span>Overview</a><a class="pn next" href="../docs/02_background_and_literature.html"><span>Next</span>2. Background and literature</a></nav>
+  </main>
+  <footer class="foot">
+    <p>Study aid for the B.Sc. thesis at Brac University, October 2026. The thesis PDF is the authoritative source; every number here is copied from it.</p>
+  </footer>
+</div>
+</div>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p><button type="button" class="close">Close</button></dialog>
+<script type="module" src="../assets/site.js"></script>
+</body>
+</html>

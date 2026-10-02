@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forecasting models, training regimes and the experiment grid | CP-FIM thesis study guide</title>
+<meta name="description" content="Illustrated study guide for the BRAC University thesis on selective unlearning for temporal regression (CP-FIM).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%272%27 y=%274%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3Crect x=%277%27 y=%2712%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%232a78d6%27/%3E%3Crect x=%2712%27 y=%2720%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+options:{ignoreHtmlClass:'mermaid'},chtml:{scale:0.98}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="side" id="side">
+  <a class="brand" href="../index.html">CP-FIM thesis<br><span>study guide</span></a>
+  <nav aria-label="Chapters"><a class="side-home" href="../index.html">Overview</a><ol><li><a href="../docs/01_big_picture.html"><span class="n">1</span>The big picture</a></li><li><a href="../docs/02_background_and_literature.html"><span class="n">2</span>Background and literature</a></li><li><a href="../docs/03_data_and_deletion.html"><span class="n">3</span>Data and deletion requests</a></li><li><a href="../docs/04_models_and_training.html" class="active" aria-current="page"><span class="n">4</span>Forecasting models, training regimes and the experiment grid</a></li><li><a href="../docs/05_cpfim_method.html"><span class="n">5</span>CP-FIM: the proposed method</a></li><li><a href="../docs/06_comparison_methods.html"><span class="n">6</span>Comparison methods, design alternatives and ablations</a></li><li><a href="../docs/07_evaluation_metrics.html"><span class="n">7</span>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></li><li><a href="../docs/08_results.html"><span class="n">8</span>Results</a></li><li><a href="../docs/09_fixes_statistics_robustness.html"><span class="n">9</span>Issues found and fixed, statistics and robustness</a></li><li><a href="../docs/10_conclusion_and_impact.html"><span class="n">10</span>Conclusion, contributions, limitations, future work and impact</a></li><li><a href="../docs/11_cheat_sheet.html"><span class="n">11</span>Cheat sheet: every key number, formula and term on one page</a></li><li><a href="../docs/12_viva_questions.html"><span class="n">12</span>Viva / defence Q&amp;A</a></li><li><a href="../docs/13_figure_atlas.html"><span class="n">13</span>Figure atlas: every figure in this repository</a></li></ol></nav>
+  <div class="side-foot">
+    <button type="button" class="theme" id="theme" aria-pressed="false">Dark mode</button>
+    <a href="https://github.com/Tariq-15/temp111">Source on GitHub</a>
+  </div>
+</aside>
+<div class="main-wrap">
+  <div class="topbar">
+    <button type="button" class="menu" id="menu" aria-controls="side" aria-expanded="false">Chapters</button>
+    <a class="top-brand" href="../index.html">CP-FIM thesis study guide</a>
+  </div>
+  <main id="main" class="content">
+  <div class="strip"><svg class="windows" viewBox="-2 -2 656 123" role="navigation" aria-label="Chapters, drawn as overlapping sliding windows"><line class="axis" x1="0" y1="105" x2="652" y2="105"/><line class="tick" x1="0" y1="102" x2="0" y2="108"/><line class="tick" x1="22" y1="102" x2="22" y2="108"/><line class="tick" x1="44" y1="102" x2="44" y2="108"/><line class="tick" x1="66" y1="102" x2="66" y2="108"/><line class="tick" x1="88" y1="102" x2="88" y2="108"/><line class="tick" x1="110" y1="102" x2="110" y2="108"/><line class="tick" x1="132" y1="102" x2="132" y2="108"/><line class="tick" x1="154" y1="102" x2="154" y2="108"/><line class="tick" x1="176" y1="102" x2="176" y2="108"/><line class="tick" x1="198" y1="102" x2="198" y2="108"/><line class="tick" x1="220" y1="102" x2="220" y2="108"/><line class="tick" x1="242" y1="102" x2="242" y2="108"/><line class="tick" x1="264" y1="102" x2="264" y2="108"/><line class="tick" x1="286" y1="102" x2="286" y2="108"/><line class="tick" x1="308" y1="102" x2="308" y2="108"/><line class="tick" x1="330" y1="102" x2="330" y2="108"/><line class="tick" x1="352" y1="102" x2="352" y2="108"/><line class="tick" x1="374" y1="102" x2="374" y2="108"/><line class="tick" x1="396" y1="102" x2="396" y2="108"/><line class="tick" x1="418" y1="102" x2="418" y2="108"/><line class="tick" x1="440" y1="102" x2="440" y2="108"/><line class="tick" x1="462" y1="102" x2="462" y2="108"/><line class="tick" x1="484" y1="102" x2="484" y2="108"/><line class="tick" x1="506" y1="102" x2="506" y2="108"/><line class="tick" x1="528" y1="102" x2="528" y2="108"/><line class="tick" x1="550" y1="102" x2="550" y2="108"/><line class="tick" x1="572" y1="102" x2="572" y2="108"/><line class="tick" x1="594" y1="102" x2="594" y2="108"/><line class="tick" x1="616" y1="102" x2="616" y2="108"/><line class="tick" x1="638" y1="102" x2="638" y2="108"/><a href="01_big_picture.html" class="win done" aria-label="Chapter 1: The big picture"><title>1. The big picture</title><rect x="0" y="0" width="124" height="26" rx="6"/><text x="12" y="17.5">1<tspan class="lbl" dx="8">Big picture</tspan></text></a><a href="02_background_and_literature.html" class="win done" aria-label="Chapter 2: Background and literature"><title>2. Background and literature</title><rect x="44" y="33" width="124" height="26" rx="6"/><text x="56" y="50.5">2<tspan class="lbl" dx="8">Literature</tspan></text></a><a href="03_data_and_deletion.html" class="win done" aria-label="Chapter 3: Data and deletion requests"><title>3. Data and deletion requests</title><rect x="88" y="66" width="124" height="26" rx="6"/><text x="100" y="83.5">3<tspan class="lbl" dx="8">Data</tspan></text></a><a href="04_models_and_training.html" class="win current" aria-label="Chapter 4: Forecasting models, training regimes and the experiment grid" aria-current="page"><title>4. Forecasting models, training regimes and the experiment grid</title><rect x="132" y="0" width="124" height="26" rx="6"/><text x="144" y="17.5">4<tspan class="lbl" dx="8">Models</tspan></text></a><a href="05_cpfim_method.html" class="win " aria-label="Chapter 5: CP-FIM: the proposed method"><title>5. CP-FIM: the proposed method</title><rect x="176" y="33" width="124" height="26" rx="6"/><text x="188" y="50.5">5<tspan class="lbl" dx="8">CP-FIM</tspan></text></a><a href="06_comparison_methods.html" class="win " aria-label="Chapter 6: Comparison methods, design alternatives and ablations"><title>6. Comparison methods, design alternatives and ablations</title><rect x="220" y="66" width="124" height="26" rx="6"/><text x="232" y="83.5">6<tspan class="lbl" dx="8">Methods</tspan></text></a><a href="07_evaluation_metrics.html" class="win " aria-label="Chapter 7: Evaluation metrics: how &quot;unlearning worked?&quot; is measured"><title>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</title><rect x="264" y="0" width="124" height="26" rx="6"/><text x="276" y="17.5">7<tspan class="lbl" dx="8">Metrics</tspan></text></a><a href="08_results.html" class="win " aria-label="Chapter 8: Results"><title>8. Results</title><rect x="308" y="33" width="124" height="26" rx="6"/><text x="320" y="50.5">8<tspan class="lbl" dx="8">Results</tspan></text></a><a href="09_fixes_statistics_robustness.html" class="win " aria-label="Chapter 9: Issues found and fixed, statistics and robustness"><title>9. Issues found and fixed, statistics and robustness</title><rect x="352" y="66" width="124" height="26" rx="6"/><text x="364" y="83.5">9<tspan class="lbl" dx="8">Fixes, stats</tspan></text></a><a href="10_conclusion_and_impact.html" class="win " aria-label="Chapter 10: Conclusion, contributions, limitations, future work and impact"><title>10. Conclusion, contributions, limitations, future work and impact</title><rect x="396" y="0" width="124" height="26" rx="6"/><text x="408" y="17.5">10<tspan class="lbl" dx="8">Conclusion</tspan></text></a><a href="11_cheat_sheet.html" class="win " aria-label="Chapter 11: Cheat sheet: every key number, formula and term on one page"><title>11. Cheat sheet: every key number, formula and term on one page</title><rect x="440" y="33" width="124" height="26" rx="6"/><text x="452" y="50.5">11<tspan class="lbl" dx="8">Cheat sheet</tspan></text></a><a href="12_viva_questions.html" class="win " aria-label="Chapter 12: Viva / defence Q&amp;A"><title>12. Viva / defence Q&amp;A</title><rect x="484" y="66" width="124" height="26" rx="6"/><text x="496" y="83.5">12<tspan class="lbl" dx="8">Viva Q&amp;A</tspan></text></a><a href="13_figure_atlas.html" class="win " aria-label="Chapter 13: Figure atlas: every figure in this repository"><title>13. Figure atlas: every figure in this repository</title><rect x="528" y="0" width="124" height="26" rx="6"/><text x="540" y="17.5">13<tspan class="lbl" dx="8">Figures</tspan></text></a></svg></div><header class="chapter-head"><p class="chapter-num">Chapter 4 of 13</p><h1>Forecasting models, training regimes and the experiment grid</h1><p class="chapter-sub">Thesis Sections 4.5 and 4.8</p></header>
+  <h2 id="41-the-five-architectures-table-414">4.1 The five architectures (Table 4.14) <a class="header-anchor" href="#41-the-five-architectures-table-414">#</a></h2>
+<p>Width <span class="math">\(d\)</span> = <strong>128</strong> (standard regime) or <strong>256</strong> (high-capacity regime).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Layers</th>
+<th>Output head</th>
+<th>Used on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LSTM</strong></td>
+<td>3-layer LSTM (hidden size <span class="math">\(d\)</span>), dropout between layers</td>
+<td>linear(64) → ReLU → dropout → linear(1)</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td><strong>GRU</strong></td>
+<td>3-layer GRU (hidden size <span class="math">\(d\)</span>)</td>
+<td>same head</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td><strong>BiLSTM</strong></td>
+<td>3-layer bidirectional LSTM (<span class="math">\(d\)</span> per direction); reads the <strong>observed input window</strong> both ways and never sees future targets</td>
+<td>same head</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td><strong>CNN-LSTM</strong></td>
+<td>2 × Conv1D (64 and 128 filters, kernel 3, ReLU) → dropout → 3-layer LSTM</td>
+<td>same head</td>
+<td>Finance</td>
+</tr>
+<tr>
+<td><strong>PatchTST</strong></td>
+<td>instance normalisation; patch length 16, stride 8 → <strong>11 patches</strong>; linear patch embedding + learned positions; 3 pre-norm Transformer layers, 8 heads, FFN size <span class="math">\(4d\)</span>, GELU</td>
+<td>flatten → dropout → linear to 96 steps per channel</td>
+<td>ETT</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>How each one works, in one line:</strong></p>
+<ul>
+<li><strong>LSTM:</strong> input, forget and output gates control what is stored in and exposed from the cell state as it reads the 30-day sequence in order.</li>
+<li><strong>GRU:</strong> update and reset gates, with no separate cell state, so it is structurally simpler than LSTM.</li>
+<li><strong>BiLSTM:</strong> one stack reads forward and one reads backward over the input window; their final states are joined.</li>
+<li><strong>CNN-LSTM:</strong> convolutions pick out short local patterns, then the LSTM models how they develop over time.</li>
+<li><strong>PatchTST:</strong> each of the 7 channels is processed <em>independently</em>. It is cut into overlapping patches, embedded, and passed through a Transformer encoder. Patches shorten the attention sequence while keeping local patterns.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>LSTM</th>
+<th>GRU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="zoom" href="../figures/flowcharts/16_lstm_forecasting.png"><img loading="lazy" src="../figures/flowcharts/16_lstm_forecasting.png" alt="" /></a></td>
+<td><a class="zoom" href="../figures/flowcharts/17_gru_forecasting.png"><img loading="lazy" src="../figures/flowcharts/17_gru_forecasting.png" alt="" /></a></td>
+</tr>
+<tr>
+<td><strong>BiLSTM</strong></td>
+<td><strong>CNN-LSTM</strong></td>
+</tr>
+<tr>
+<td><a class="zoom" href="../figures/flowcharts/18_bidirectional_lstm.png"><img loading="lazy" src="../figures/flowcharts/18_bidirectional_lstm.png" alt="" /></a></td>
+<td><a class="zoom" href="../figures/flowcharts/19_cnn_lstm.png"><img loading="lazy" src="../figures/flowcharts/19_cnn_lstm.png" alt="" /></a></td>
+</tr>
+</tbody>
+</table></div>
+<figure><a class="zoom" href="../figures/flowcharts/20_patchtst.png"><img loading="lazy" src="../figures/flowcharts/20_patchtst.png" alt="PatchTST" /></a></figure>
+<blockquote>
+<p>⚠️ <strong>PatchTST note:</strong> in the <strong>standard regime</strong> (dropout 0.3), the attention dropout stayed active inside the gradient helper used by the Fisher/Pareto methods. This is the <strong>attention-dropout defect</strong>, explained in <a href="09_fixes_statistics_robustness.html#92-the-attention-dropout-defect">chapter 9</a>.</p>
+</blockquote>
+<h2 id="42-two-training-regimes-table-415">4.2 Two training regimes (Table 4.15) <a class="header-anchor" href="#42-two-training-regimes-table-415">#</a></h2>
+<p>Shared by both regimes: Adam, learning rate <span class="math">\(5\times10^{-4}\)</span>, cosine schedule, batch size 512, gradient clipping at 1.0.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Standard</th>
+<th>High-capacity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hidden size / width</td>
+<td>128</td>
+<td>256</td>
+</tr>
+<tr>
+<td>Dropout</td>
+<td>0.3</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>Weight decay</td>
+<td><span class="math">\(10^{-5}\)</span></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Max epochs</td>
+<td>150</td>
+<td>500 (1,000 if ≥ 20,000 examples)</td>
+</tr>
+<tr>
+<td>Early stopping</td>
+<td>patience 40</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Checkpoint used</td>
+<td>best validation epoch</td>
+<td>final epoch</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Why two regimes?</strong></p>
+<ul>
+<li><strong>Standard</strong> = a normal, regularised forecasting setup.</li>
+<li><strong>High-capacity</strong> = designed to make <strong>memorisation more likely</strong>, so the deletion diagnostics (DSR, membership AUC) have a stronger signal.</li>
+</ul>
+<blockquote>
+<p>The regimes change <strong>five settings at once</strong>, so a difference between them cannot be traced to one setting (for example width alone). This is a stated limitation.</p>
+</blockquote>
+<figure><a class="zoom" href="../figures/flowcharts/15_training_regimes.png"><img loading="lazy" src="../figures/flowcharts/15_training_regimes.png" alt="Training regimes" /></a></figure>
+<h2 id="43-the-experiment-grid">4.3 The experiment grid <a class="header-anchor" href="#43-the-experiment-grid">#</a></h2>
+<div class="diagram"><pre class="mermaid">flowchart TB
+    subgraph FIN[&quot;Financial branch&quot;]
+      F1[&quot;4 datasets&lt;br/&gt;SP500 · NASDAQ · MultiStock · MixedAssets&quot;] --&gt; F2[&quot;× 4 models&lt;br/&gt;LSTM · GRU · BiLSTM · CNN-LSTM&quot;]
+      F2 --&gt; F3[&quot;× 2 regimes&quot;] --&gt; F4[&quot;× 1 request (5 crises)&quot;]
+      F4 --&gt; F5[&quot;= 32 configurations&lt;br/&gt;= 32 aggregate settings&quot;]
+    end
+    subgraph ETT[&quot;ETT branch&quot;]
+      E1[&quot;4 datasets&lt;br/&gt;ETTh1 · ETTh2 · ETTm1 · ETTm2&quot;] --&gt; E2[&quot;× PatchTST&quot;]
+      E2 --&gt; E3[&quot;× 2 regimes&quot;] --&gt; E4[&quot;× 3 protocols&lt;br/&gt;random · block · time stamp&quot;]
+      E4 --&gt; E5[&quot;× 3 requests (101, 202, 303)&quot;]
+      E5 --&gt; E6[&quot;= 72 configurations&lt;br/&gt;= 24 aggregate settings&quot;]
+    end
+    F5 --&gt; T[&quot;104 configurations&lt;br/&gt;× 3 seeds × 32 method variants&lt;br/&gt;= 9,984 method runs&quot;]
+    E6 --&gt; T
+    T --&gt; P[&quot;56 aggregate settings&lt;br/&gt;312 paired runs per method&lt;br/&gt;= 32×3 + 24×3×3&quot;]
+    style T fill:#dbe8fb,stroke:#2a78d6
+    style P fill:#d6f2e7,stroke:#1baf7a
+</pre></div>
+<h3 id="size-of-the-final-experiment-table-420">Size of the final experiment (Table 4.20) <a class="header-anchor" href="#size-of-the-final-experiment-table-420">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th style="text-align:right">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Financial configurations (4 datasets × 4 models × 2 regimes × 1 request)</td>
+<td style="text-align:right">32</td>
+</tr>
+<tr>
+<td>ETT configurations (4 datasets × PatchTST × 2 regimes × 3 protocols × 3 requests)</td>
+<td style="text-align:right">72</td>
+</tr>
+<tr>
+<td>Method variants per seed (12 methods incl. references + 15 ablations + 5 controls)</td>
+<td style="text-align:right">32</td>
+</tr>
+<tr>
+<td>Seeds per configuration</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td><strong>Total method runs</strong> (104 × 3 × 32)</td>
+<td style="text-align:right"><strong>9,984</strong></td>
+</tr>
+<tr>
+<td>Aggregate settings (dataset × model × regime × protocol)</td>
+<td style="text-align:right">56</td>
+</tr>
+<tr>
+<td>Paired runs per method (settings × requests × seeds)</td>
+<td style="text-align:right">312</td>
+</tr>
+<tr>
+<td>Compute time</td>
+<td style="text-align:right">about 74 GPU-hours</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Know the two &quot;counting units&quot; well. Examiners like to ask about them:</strong></p>
+<ul>
+<li>A <strong>setting</strong> = dataset × model × regime × protocol. There are <strong>56</strong>: 32 finance + 24 ETT. &quot;56/56&quot; means <em>every</em> setting.</li>
+<li>A <strong>paired run</strong> = one setting × one request × one seed, where two methods are compared on the <strong>same</strong> original model, oracle, seed and request. There are <strong>312</strong> per method: finance 32 × 3 = 96, ETT 24 × 3 requests × 3 seeds = 216.</li>
+</ul>
+<figure><a class="zoom" href="../figures/flowcharts/43_experimental_grid_counts.png"><img loading="lazy" src="../figures/flowcharts/43_experimental_grid_counts.png" alt="Experimental grid counts" /></a></figure>
+<h2 id="44-what-runs-for-every-configuration-and-seed">4.4 What runs for every configuration and seed <a class="header-anchor" href="#44-what-runs-for-every-configuration-and-seed">#</a></h2>
+<figure><a class="zoom" href="../figures/thesis/methodology/experimental_pipeline_per_seed.png"><img loading="lazy" src="../figures/thesis/methodology/experimental_pipeline_per_seed.png" alt="Experimental pipeline per configuration and seed" /></a><figcaption>Thesis Fig 4.10. Self-tests → data validation → windows/splits/purge/attack hold-out → deletion request + closure → original model (seed s) and oracle (seed s + 7000) → unlearning from a copy of the original (&quot;CP-FIM + 30 other runs&quot;) → evaluation vs the oracle and persistence → retrain variability (3 oracle pairs) → aggregation and paired statistics.</figcaption></figure>
+<h2 id="45-implementation-and-reproducibility">4.5 Implementation and reproducibility <a class="header-anchor" href="#45-implementation-and-reproducibility">#</a></h2>
+<ul>
+<li><strong>One Jupyter notebook in PyTorch</strong>, run on <strong>one RTX 4070 Ti SUPER (16 GB)</strong>.</li>
+<li><strong>Built-in self-tests run first</strong>: Fisher values checked against an analytic result, exact block sizes, rejection of non-finite values and checkpoint recovery. All 8 datasets are validated. The notebook <strong>stops if any check fails</strong>.</li>
+<li><strong>Run signature</strong> = configuration + code fingerprint + data hashes, so results from different code or data can never be mixed.</li>
+<li><strong>Checkpointing</strong> every epoch, every 250 updates or every 30 minutes, with resume and no repeated work.</li>
+<li><strong>Result:</strong> all 104 configurations finished, <strong>0 method runs failed</strong>.</li>
+<li><strong>Compute split:</strong> 9.6 h original models + 17.6 h retrained references + 47.2 h unlearning methods ≈ 74 GPU-hours.</li>
+</ul>
+<figure><a class="zoom" href="../figures/summary/08_compute_budget.png"><img loading="lazy" src="../figures/summary/08_compute_budget.png" alt="Compute budget" /></a></figure>
+<figure><a class="zoom" href="../figures/flowcharts/44_reproducible_execution.png"><img loading="lazy" src="../figures/flowcharts/44_reproducible_execution.png" alt="Reproducible execution" /></a></figure>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Software</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.11</td>
+</tr>
+<tr>
+<td>PyTorch</td>
+<td>2.11 with CUDA 12.8</td>
+</tr>
+<tr>
+<td>Others</td>
+<td>NumPy, pandas, scikit-learn, Matplotlib, Jupyter</td>
+</tr>
+<tr>
+<td>Seeds</td>
+<td>training 42, 43, 44; oracle = seed + 7000; ETT requests 101, 202, 303</td>
+</tr>
+</tbody>
+</table></div>
+
+  <nav class="prevnext" aria-label="Chapter navigation"><a class="pn prev" href="../docs/03_data_and_deletion.html"><span>Previous</span>3. Data and deletion requests</a><a class="pn next" href="../docs/05_cpfim_method.html"><span>Next</span>5. CP-FIM: the proposed method</a></nav>
+  </main>
+  <footer class="foot">
+    <p>Study aid for the B.Sc. thesis at Brac University, October 2026. The thesis PDF is the authoritative source; every number here is copied from it.</p>
+  </footer>
+</div>
+</div>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p><button type="button" class="close">Close</button></dialog>
+<script type="module" src="../assets/site.js"></script>
+</body>
+</html>

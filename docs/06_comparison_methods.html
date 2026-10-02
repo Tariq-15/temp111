@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparison methods, design alternatives and ablations | CP-FIM thesis study guide</title>
+<meta name="description" content="Illustrated study guide for the BRAC University thesis on selective unlearning for temporal regression (CP-FIM).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%272%27 y=%274%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3Crect x=%277%27 y=%2712%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%232a78d6%27/%3E%3Crect x=%2712%27 y=%2720%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+options:{ignoreHtmlClass:'mermaid'},chtml:{scale:0.98}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="side" id="side">
+  <a class="brand" href="../index.html">CP-FIM thesis<br><span>study guide</span></a>
+  <nav aria-label="Chapters"><a class="side-home" href="../index.html">Overview</a><ol><li><a href="../docs/01_big_picture.html"><span class="n">1</span>The big picture</a></li><li><a href="../docs/02_background_and_literature.html"><span class="n">2</span>Background and literature</a></li><li><a href="../docs/03_data_and_deletion.html"><span class="n">3</span>Data and deletion requests</a></li><li><a href="../docs/04_models_and_training.html"><span class="n">4</span>Forecasting models, training regimes and the experiment grid</a></li><li><a href="../docs/05_cpfim_method.html"><span class="n">5</span>CP-FIM: the proposed method</a></li><li><a href="../docs/06_comparison_methods.html" class="active" aria-current="page"><span class="n">6</span>Comparison methods, design alternatives and ablations</a></li><li><a href="../docs/07_evaluation_metrics.html"><span class="n">7</span>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></li><li><a href="../docs/08_results.html"><span class="n">8</span>Results</a></li><li><a href="../docs/09_fixes_statistics_robustness.html"><span class="n">9</span>Issues found and fixed, statistics and robustness</a></li><li><a href="../docs/10_conclusion_and_impact.html"><span class="n">10</span>Conclusion, contributions, limitations, future work and impact</a></li><li><a href="../docs/11_cheat_sheet.html"><span class="n">11</span>Cheat sheet: every key number, formula and term on one page</a></li><li><a href="../docs/12_viva_questions.html"><span class="n">12</span>Viva / defence Q&amp;A</a></li><li><a href="../docs/13_figure_atlas.html"><span class="n">13</span>Figure atlas: every figure in this repository</a></li></ol></nav>
+  <div class="side-foot">
+    <button type="button" class="theme" id="theme" aria-pressed="false">Dark mode</button>
+    <a href="https://github.com/Tariq-15/temp111">Source on GitHub</a>
+  </div>
+</aside>
+<div class="main-wrap">
+  <div class="topbar">
+    <button type="button" class="menu" id="menu" aria-controls="side" aria-expanded="false">Chapters</button>
+    <a class="top-brand" href="../index.html">CP-FIM thesis study guide</a>
+  </div>
+  <main id="main" class="content">
+  <div class="strip"><svg class="windows" viewBox="-2 -2 656 123" role="navigation" aria-label="Chapters, drawn as overlapping sliding windows"><line class="axis" x1="0" y1="105" x2="652" y2="105"/><line class="tick" x1="0" y1="102" x2="0" y2="108"/><line class="tick" x1="22" y1="102" x2="22" y2="108"/><line class="tick" x1="44" y1="102" x2="44" y2="108"/><line class="tick" x1="66" y1="102" x2="66" y2="108"/><line class="tick" x1="88" y1="102" x2="88" y2="108"/><line class="tick" x1="110" y1="102" x2="110" y2="108"/><line class="tick" x1="132" y1="102" x2="132" y2="108"/><line class="tick" x1="154" y1="102" x2="154" y2="108"/><line class="tick" x1="176" y1="102" x2="176" y2="108"/><line class="tick" x1="198" y1="102" x2="198" y2="108"/><line class="tick" x1="220" y1="102" x2="220" y2="108"/><line class="tick" x1="242" y1="102" x2="242" y2="108"/><line class="tick" x1="264" y1="102" x2="264" y2="108"/><line class="tick" x1="286" y1="102" x2="286" y2="108"/><line class="tick" x1="308" y1="102" x2="308" y2="108"/><line class="tick" x1="330" y1="102" x2="330" y2="108"/><line class="tick" x1="352" y1="102" x2="352" y2="108"/><line class="tick" x1="374" y1="102" x2="374" y2="108"/><line class="tick" x1="396" y1="102" x2="396" y2="108"/><line class="tick" x1="418" y1="102" x2="418" y2="108"/><line class="tick" x1="440" y1="102" x2="440" y2="108"/><line class="tick" x1="462" y1="102" x2="462" y2="108"/><line class="tick" x1="484" y1="102" x2="484" y2="108"/><line class="tick" x1="506" y1="102" x2="506" y2="108"/><line class="tick" x1="528" y1="102" x2="528" y2="108"/><line class="tick" x1="550" y1="102" x2="550" y2="108"/><line class="tick" x1="572" y1="102" x2="572" y2="108"/><line class="tick" x1="594" y1="102" x2="594" y2="108"/><line class="tick" x1="616" y1="102" x2="616" y2="108"/><line class="tick" x1="638" y1="102" x2="638" y2="108"/><a href="01_big_picture.html" class="win done" aria-label="Chapter 1: The big picture"><title>1. The big picture</title><rect x="0" y="0" width="124" height="26" rx="6"/><text x="12" y="17.5">1<tspan class="lbl" dx="8">Big picture</tspan></text></a><a href="02_background_and_literature.html" class="win done" aria-label="Chapter 2: Background and literature"><title>2. Background and literature</title><rect x="44" y="33" width="124" height="26" rx="6"/><text x="56" y="50.5">2<tspan class="lbl" dx="8">Literature</tspan></text></a><a href="03_data_and_deletion.html" class="win done" aria-label="Chapter 3: Data and deletion requests"><title>3. Data and deletion requests</title><rect x="88" y="66" width="124" height="26" rx="6"/><text x="100" y="83.5">3<tspan class="lbl" dx="8">Data</tspan></text></a><a href="04_models_and_training.html" class="win done" aria-label="Chapter 4: Forecasting models, training regimes and the experiment grid"><title>4. Forecasting models, training regimes and the experiment grid</title><rect x="132" y="0" width="124" height="26" rx="6"/><text x="144" y="17.5">4<tspan class="lbl" dx="8">Models</tspan></text></a><a href="05_cpfim_method.html" class="win done" aria-label="Chapter 5: CP-FIM: the proposed method"><title>5. CP-FIM: the proposed method</title><rect x="176" y="33" width="124" height="26" rx="6"/><text x="188" y="50.5">5<tspan class="lbl" dx="8">CP-FIM</tspan></text></a><a href="06_comparison_methods.html" class="win current" aria-label="Chapter 6: Comparison methods, design alternatives and ablations" aria-current="page"><title>6. Comparison methods, design alternatives and ablations</title><rect x="220" y="66" width="124" height="26" rx="6"/><text x="232" y="83.5">6<tspan class="lbl" dx="8">Methods</tspan></text></a><a href="07_evaluation_metrics.html" class="win " aria-label="Chapter 7: Evaluation metrics: how &quot;unlearning worked?&quot; is measured"><title>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</title><rect x="264" y="0" width="124" height="26" rx="6"/><text x="276" y="17.5">7<tspan class="lbl" dx="8">Metrics</tspan></text></a><a href="08_results.html" class="win " aria-label="Chapter 8: Results"><title>8. Results</title><rect x="308" y="33" width="124" height="26" rx="6"/><text x="320" y="50.5">8<tspan class="lbl" dx="8">Results</tspan></text></a><a href="09_fixes_statistics_robustness.html" class="win " aria-label="Chapter 9: Issues found and fixed, statistics and robustness"><title>9. Issues found and fixed, statistics and robustness</title><rect x="352" y="66" width="124" height="26" rx="6"/><text x="364" y="83.5">9<tspan class="lbl" dx="8">Fixes, stats</tspan></text></a><a href="10_conclusion_and_impact.html" class="win " aria-label="Chapter 10: Conclusion, contributions, limitations, future work and impact"><title>10. Conclusion, contributions, limitations, future work and impact</title><rect x="396" y="0" width="124" height="26" rx="6"/><text x="408" y="17.5">10<tspan class="lbl" dx="8">Conclusion</tspan></text></a><a href="11_cheat_sheet.html" class="win " aria-label="Chapter 11: Cheat sheet: every key number, formula and term on one page"><title>11. Cheat sheet: every key number, formula and term on one page</title><rect x="440" y="33" width="124" height="26" rx="6"/><text x="452" y="50.5">11<tspan class="lbl" dx="8">Cheat sheet</tspan></text></a><a href="12_viva_questions.html" class="win " aria-label="Chapter 12: Viva / defence Q&amp;A"><title>12. Viva / defence Q&amp;A</title><rect x="484" y="66" width="124" height="26" rx="6"/><text x="496" y="83.5">12<tspan class="lbl" dx="8">Viva Q&amp;A</tspan></text></a><a href="13_figure_atlas.html" class="win " aria-label="Chapter 13: Figure atlas: every figure in this repository"><title>13. Figure atlas: every figure in this repository</title><rect x="528" y="0" width="124" height="26" rx="6"/><text x="540" y="17.5">13<tspan class="lbl" dx="8">Figures</tspan></text></a></svg></div><header class="chapter-head"><p class="chapter-num">Chapter 6 of 13</p><h1>Comparison methods, design alternatives and ablations</h1><p class="chapter-sub">Thesis Sections 4.2 and 4.6</p></header>
+  <h2 id="61-the-twelve-methods-table-416">6.1 The twelve methods (Table 4.16) <a class="header-anchor" href="#61-the-twelve-methods-table-416">#</a></h2>
+<p>Methods marked <em>adaptation</em> follow the cited paper's idea but are <strong>our own regression implementation</strong>, not the authors' code.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>What it does</th>
+<th>Family</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>M1</strong></td>
+<td>No unlearning</td>
+<td>keeps the original model (<strong>lower reference</strong>)</td>
+<td>reference</td>
+</tr>
+<tr>
+<td><strong>M2</strong></td>
+<td>Retraining (oracle)</td>
+<td>trains from scratch on <span class="math">\(D_r\)</span> (<strong>the target</strong>)</td>
+<td>reference</td>
+</tr>
+<tr>
+<td><strong>M3</strong></td>
+<td>Anchored gradient ascent</td>
+<td>increases forget loss, with penalty <span class="math">\(5\lVert\theta-\theta_0\rVert^2\)</span> keeping weights near the original (Golatkar et al.)</td>
+<td>aggressive</td>
+</tr>
+<tr>
+<td><strong>M5</strong></td>
+<td>SCRUB-style alternating</td>
+<td>alternates an ascent step on forget data and a descent step on retain data (<em>adaptation</em> of Kurmanji et al.)</td>
+<td>gentle</td>
+</tr>
+<tr>
+<td><strong>M6</strong></td>
+<td>Fisher noise + fine-tuning</td>
+<td>adds noise shaped by the forget-set Fisher, then fine-tunes on retain data (<em>adaptation</em> of Golatkar et al.)</td>
+<td>gentle</td>
+</tr>
+<tr>
+<td><strong>M8</strong></td>
+<td>Contrast-FIM</td>
+<td>per-tensor Fisher contrast scaling an alternating ascent/descent update (the earlier version of our idea)</td>
+<td>gentle</td>
+</tr>
+<tr>
+<td><strong>M9</strong></td>
+<td><strong>CP-FIM (proposed)</strong></td>
+<td>Fisher-contrast-scaled, teacher-anchored, safeguarded Pareto teacher–student update</td>
+<td><strong>proposed</strong></td>
+</tr>
+<tr>
+<td><strong>M10</strong></td>
+<td>Direct-noise adaptation</td>
+<td>pushes forget predictions toward Gaussian noise with the same safeguards (<em>inspired by</em> TS-Unlearn)</td>
+<td>aggressive</td>
+</tr>
+<tr>
+<td><strong>M11</strong></td>
+<td>Max loss</td>
+<td>plain gradient ascent on the forget loss</td>
+<td>aggressive</td>
+</tr>
+<tr>
+<td><strong>M12</strong></td>
+<td>Noisy label</td>
+<td>fine-tunes on forget inputs with noisy targets (Graves et al.)</td>
+<td>aggressive</td>
+</tr>
+<tr>
+<td><strong>M13</strong></td>
+<td>Retain label</td>
+<td>fine-tunes on forget inputs with targets copied from retain examples</td>
+<td>aggressive</td>
+</tr>
+<tr>
+<td><strong>FT</strong></td>
+<td>Retain fine-tuning</td>
+<td>50 steps of normal training on retain data only</td>
+<td>gentle</td>
+</tr>
+</tbody>
+</table></div>
+<p>(The numbering skips M4 and M7. The final thesis does not list methods with those IDs.)</p>
+<div class="diagram"><pre class="mermaid">flowchart TB
+    subgraph REF[&quot;References&quot;]
+      M1[&quot;M1 No unlearning&quot;]
+      M2[&quot;M2 Retrain (oracle)&quot;]
+    end
+    subgraph AGG[&quot;Push AWAY from forget data (over-forget)&quot;]
+      M3[&quot;M3 Anchored ascent&quot;]
+      M11[&quot;M11 Max loss&quot;]
+      M10[&quot;M10 Direct noise&quot;]
+      M12[&quot;M12 Noisy label&quot;]
+      M13[&quot;M13 Retain label&quot;]
+    end
+    subgraph GEN[&quot;Stay ANCHORED / repair (under-forget)&quot;]
+      M5[&quot;M5 SCRUB-style&quot;]
+      M6[&quot;M6 Fisher noise + FT&quot;]
+      M8[&quot;M8 Contrast-FIM&quot;]
+      FT[&quot;FT Retain fine-tune&quot;]
+      M9[&quot;M9 CP-FIM ★&quot;]
+    end
+    style M9 fill:#dbe8fb,stroke:#2a78d6,stroke-width:3px
+    style AGG fill:#fde3d7,stroke:#eb6834
+    style GEN fill:#f1f0ec,stroke:#9a9891
+</pre></div>
+<h3 id="how-each-method-works">How each method works <a class="header-anchor" href="#how-each-method-works">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method pair</th>
+<th>Mechanism</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>M3 anchored ascent, M11 max loss</strong></td>
+<td>Gradient <strong>ascent</strong> on forget-set MSE. M3 adds a squared-distance penalty to the original weights and a tighter clip.</td>
+<td>Forget error overshoots the oracle; test performance can be destroyed (worst 12,866× for M3).</td>
+</tr>
+<tr>
+<td><strong>M5 SCRUB-style, M8 Contrast-FIM</strong></td>
+<td>Alternate: a clipped ascent step on a forget batch, then a clipped descent step on a retain batch (the &quot;repair&quot;). M8 scales the ascent by a <strong>per-tensor</strong> Fisher contrast.</td>
+<td>Usually stable, but stays close to the original.</td>
+</tr>
+<tr>
+<td><strong>M6 Fisher noise + FT, FT</strong></td>
+<td>M6 adds parameter noise with s.d. ∝ (forget Fisher)^−½, then fine-tunes on retain labels. FT just keeps training on retain data.</td>
+<td>Preserves utility, but may stay close to the original on the deleted examples.</td>
+</tr>
+<tr>
+<td><strong>M9 CP-FIM, M10 direct noise</strong></td>
+<td>Same loop; M9 targets <em>teacher + calibrated noise</em> with a Fisher contrast; M10 targets <em>zero-centred noise</em>, a different noise scale, and no contrast.</td>
+<td>M10 over-forgets. M9 is stable but conservative.</td>
+</tr>
+<tr>
+<td><strong>M12 noisy label, M13 retain label</strong></td>
+<td>Supervised updates on forget inputs with altered targets: noisy original labels (M12) or labels sampled from retain examples (M13).</td>
+<td>The change spreads to related retained and test windows.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Anchored and plain ascent (M3, M11)</th>
+<th>Alternating updates (M5, M8)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="zoom" href="../figures/flowcharts/30_anchored_and_plain_ascent.png"><img loading="lazy" src="../figures/flowcharts/30_anchored_and_plain_ascent.png" alt="" /></a></td>
+<td><a class="zoom" href="../figures/flowcharts/31_alternating_forget_retain_updates.png"><img loading="lazy" src="../figures/flowcharts/31_alternating_forget_retain_updates.png" alt="" /></a></td>
+</tr>
+<tr>
+<td><strong>Fisher noise + fine-tuning (M6)</strong></td>
+<td><strong>Relabelling (M12, M13)</strong></td>
+</tr>
+<tr>
+<td><a class="zoom" href="../figures/flowcharts/32_fisher_noise_finetuning.png"><img loading="lazy" src="../figures/flowcharts/32_fisher_noise_finetuning.png" alt="" /></a></td>
+<td><a class="zoom" href="../figures/flowcharts/33_relabelling_methods.png"><img loading="lazy" src="../figures/flowcharts/33_relabelling_methods.png" alt="" /></a></td>
+</tr>
+</tbody>
+</table></div>
+<figure><a class="zoom" href="../figures/flowcharts/34_retain_only_finetuning.png"><img loading="lazy" src="../figures/flowcharts/34_retain_only_finetuning.png" alt="Retain-only fine-tuning (FT)" /></a></figure>
+<h3 id="settings-as-implemented-table-417">Settings as implemented (Table 4.17) <a class="header-anchor" href="#settings-as-implemented-table-417">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Settings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M3 Anchored ascent</td>
+<td>30 epochs over the forget set, Adam, LR <span class="math">\(10^{-5}\)</span>, anchor weight 5, gradient-norm clip 0.1</td>
+</tr>
+<tr>
+<td>M5 SCRUB-style</td>
+<td>50 iterations; each = ascent step on a forget batch (step <span class="math">\(5\times10^{-5}\)</span>, clip ±0.5) then descent step on a retain batch (step <span class="math">\(10^{-4}\)</span>, clip ±1)</td>
+</tr>
+<tr>
+<td>M6 Fisher noise + FT</td>
+<td>noise s.d. ∝ <span class="math">\((F^f_i + \text{damping})^{-1/2}\)</span>, global RMS 0.01; then 30 epochs retain fine-tuning, Adam, <span class="math">\(5\times10^{-5}\)</span></td>
+</tr>
+<tr>
+<td>M8 Contrast-FIM</td>
+<td>as M5, with the ascent step scaled by a per-tensor Fisher contrast</td>
+</tr>
+<tr>
+<td>M10 Direct-noise</td>
+<td>as CP-FIM, with the changes in Table 4.10</td>
+</tr>
+<tr>
+<td>M11 Max loss</td>
+<td>50 steps of gradient ascent on forget batches, Adam, <span class="math">\(10^{-5}\)</span></td>
+</tr>
+<tr>
+<td>M12 Noisy label</td>
+<td>10 epochs on forget inputs with targets <span class="math">\(y + \mathcal{N}(0, \mathrm{sd}(y_f)^2)\)</span>, Adam, <span class="math">\(10^{-4}\)</span></td>
+</tr>
+<tr>
+<td>M13 Retain label</td>
+<td>10 epochs on forget inputs with targets sampled from retain examples, Adam, <span class="math">\(10^{-4}\)</span></td>
+</tr>
+<tr>
+<td>FT Retain fine-tuning</td>
+<td>50 steps on retain batches, Adam, <span class="math">\(10^{-4}\)</span></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="62-design-alternatives-that-were-considered-table-43">6.2 Design alternatives that were considered (Table 4.3) <a class="header-anchor" href="#62-design-alternatives-that-were-considered-table-43">#</a></h2>
+<p>Most alternatives were <strong>kept as comparison methods or ablations</strong>, so their behaviour was measured on exactly the same data, models and requests as CP-FIM.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Advantages</th>
+<th>Disadvantages / evidence</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A.</strong> Exact retraining (M2)</td>
+<td>correct by definition; simple</td>
+<td>full training cost per request (median 105 s here; days for big models)</td>
+<td>used as the <strong>reference</strong></td>
+</tr>
+<tr>
+<td><strong>B.</strong> Exact sharded training (SISA)</td>
+<td>cheaper exact deletion</td>
+<td>overlapping windows require isolating all dependencies; splitting can reduce accuracy</td>
+<td>future comparison</td>
+</tr>
+<tr>
+<td><strong>C.</strong> Aggressive forgetting: ascent / max loss (M3, M11)</td>
+<td>simple; large change on the forget set</td>
+<td><strong>destructive</strong>: test error ≥ 50% worse in 162 (M3) and 167 (M11) of 312 runs; worst 12,866×</td>
+<td>rejected; kept as baselines</td>
+</tr>
+<tr>
+<td><strong>D.</strong> Relabelling (M12, M13)</td>
+<td>very cheap</td>
+<td>retain labels: test error ≥ 50% worse in 260 runs; noisy labels over-forget mildly</td>
+<td>rejected; kept as baselines</td>
+</tr>
+<tr>
+<td><strong>E.</strong> Direct-noise target + Pareto, TS-Unlearn style (M10)</td>
+<td>principled; balances two objectives</td>
+<td><strong>over-forgets</strong>: test ≥ 50% worse in 145 runs; median 12× farther from retraining than CP-FIM</td>
+<td>rejected as design; <strong>main comparison</strong></td>
+</tr>
+<tr>
+<td><strong>F.</strong> Contrast-scaled alternating updates (M8)</td>
+<td>uses forget-vs-retain importance</td>
+<td>per-tensor scaling can over-weight weak-contrast layers; behaviour conservative</td>
+<td>comparison method</td>
+</tr>
+<tr>
+<td><strong>G.</strong> Plain (unconstrained) Pareto distillation</td>
+<td>no manual weight</td>
+<td><strong>stalls at step 1</strong> (retain gradient = 0); RNNs did not move in <strong>192/192</strong> runs</td>
+<td>safeguards added</td>
+</tr>
+<tr>
+<td><strong>H.</strong> <strong>CP-FIM (M9)</strong></td>
+<td>stable: test error <strong>never &gt; 10% worse</strong>; closer to retraining than E in <strong>56/56</strong></td>
+<td>conservative: closer than doing nothing in only <strong>22/56</strong></td>
+<td><strong>selected</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Three families:</strong></p>
+<ol>
+<li><strong>Exact</strong> (A, B): correct, but expensive or broken by overlapping windows.</li>
+<li><strong>Push away</strong> (C, D, E): big change on the forget set, but they damage accuracy and end far from the oracle.</li>
+<li><strong>Anchored</strong> (F, G, H): safe, but they need safeguards to move at all.</li>
+</ol>
+<h3 id="how-the-alternatives-were-verified-table-44">How the alternatives were verified (Table 4.4) <a class="header-anchor" href="#how-the-alternatives-were-verified-table-44">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Verification</th>
+<th>What it checks</th>
+<th>Where reported</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Built-in self-tests</td>
+<td>Fisher vs an analytic result, exact block sizes, non-finite rejection, checkpoint recovery</td>
+<td>Implementation</td>
+</tr>
+<tr>
+<td>Pipeline checks</td>
+<td>split consistency, safe checkpoint recovery</td>
+<td>Implementation</td>
+</tr>
+<tr>
+<td><strong>Ablation grid (15)</strong></td>
+<td>which CP-FIM parts matter</td>
+<td>Results 5.2.4</td>
+</tr>
+<tr>
+<td><strong>Update-matched controls</strong></td>
+<td>that differences are not caused by the number of updates</td>
+<td>Results 5.4.2</td>
+</tr>
+<tr>
+<td>Unconstrained Pareto rule</td>
+<td>the stall of alternative G</td>
+<td>Table 5.12</td>
+</tr>
+<tr>
+<td>CPU parity check</td>
+<td>the attention-dropout fix</td>
+<td>Table 5.14</td>
+</tr>
+<tr>
+<td>Financial pilot</td>
+<td>a scale-free target for finance</td>
+<td>Table 5.15</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="63-the-fifteen-ablations-table-418">6.3 The fifteen ablations (Table 4.18) <a class="header-anchor" href="#63-the-fifteen-ablations-table-418">#</a></h2>
+<p>Each ablation changes <strong>exactly one part</strong> of CP-FIM (or of M10) and keeps everything else, <strong>including the random sampling</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Ablation</th>
+<th>Change compared with CP-FIM</th>
+<th>Tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>No contrast</td>
+<td><span class="math">\(C_i = 1\)</span> for all parameters</td>
+<td>does the Fisher contrast help?</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Shuffled contrast</td>
+<td>contrast values shuffled among parameters</td>
+<td>is it the <em>specific</em> contrast?</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Per-tensor normalisation</td>
+<td>per-layer instead of global normalisation</td>
+<td>global vs per-layer</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Alternative Fisher normalisation</td>
+<td>another normalisation of Fisher values</td>
+<td>normalisation choice</td>
+</tr>
+<tr>
+<td>5</td>
+<td>No Pareto</td>
+<td>fixed <span class="math">\(\alpha = 0.5\)</span></td>
+<td>does MGDA help?</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Unconstrained</td>
+<td>no floor/ceiling and no warm-up</td>
+<td>the stall</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Warm-up only</td>
+<td>warm-up but no floor/ceiling</td>
+<td>which safeguard matters</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Noise anchor</strong></td>
+<td>forget target = <strong>pure noise</strong> instead of teacher + noise</td>
+<td><strong>target anchoring</strong></td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Ascent anchor</strong></td>
+<td>forget objective = <strong>gradient ascent</strong></td>
+<td>target type</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Supervised retain</td>
+<td>retain loss uses true targets instead of the teacher</td>
+<td>distillation vs supervision</td>
+</tr>
+<tr>
+<td>11, 12</td>
+<td><span class="math">\(\kappa = 0.5\)</span>, <span class="math">\(\kappa = 2\)</span></td>
+<td>smaller / larger noise</td>
+<td>noise size</td>
+</tr>
+<tr>
+<td>13</td>
+<td>SGD</td>
+<td>SGD instead of Adam (same LR)</td>
+<td>optimiser</td>
+</tr>
+<tr>
+<td>14</td>
+<td>M10 unconstrained</td>
+<td>direct noise without floor/ceiling/warm-up</td>
+<td>stall in M10</td>
+</tr>
+<tr>
+<td>15</td>
+<td>M10 warm-up only</td>
+<td>direct noise with warm-up but no floor/ceiling</td>
+<td>stall in M10</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Result (Finding 8):</strong> most component changes move the result by <strong>≤ about 2% of the gap</strong>. The large effects come from replacing the <strong>forget target</strong>: pure noise → ≈ <strong>3.7 gaps</strong> away; gradient ascent → ≈ <strong>583 gaps</strong> away (ETT). See <a href="08_results.html#finding-8-which-parts-of-cp-fim-matter">Results</a>.</p>
+<h2 id="64-the-five-update-matched-controls">6.4 The five update-matched controls <a class="header-anchor" href="#64-the-five-update-matched-controls">#</a></h2>
+<p>Give <strong>M3, M5, M6, M12 and M13 the same number of updates (50)</strong> as CP-FIM, so the comparison is not just about update count.</p>
+<blockquote>
+<p><strong>Update-matched ≠ compute-matched.</strong> The methods do different amounts of work per update (CP-FIM's Fisher step is expensive).</p>
+</blockquote>
+<p><strong>Result:</strong> with 50 updates each, CP-FIM is still closer than anchored ascent, noisy label and retain label in <strong>56/56 settings</strong> (311, 305 and 312 of 312 runs). These controls still damage accuracy (test error &gt; 50% worse in 161, 74 and 302 runs). The update-matched SCRUB-style and Fisher controls behave like their originals: stable, and usually slightly closer than CP-FIM (CP-FIM closer in 17 and 20 of 56 settings).</p>
+<figure><a class="zoom" href="../figures/flowcharts/42_ablations_and_controls.png"><img loading="lazy" src="../figures/flowcharts/42_ablations_and_controls.png" alt="Ablations and controls" /></a></figure>
+
+  <nav class="prevnext" aria-label="Chapter navigation"><a class="pn prev" href="../docs/05_cpfim_method.html"><span>Previous</span>5. CP-FIM: the proposed method</a><a class="pn next" href="../docs/07_evaluation_metrics.html"><span>Next</span>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></nav>
+  </main>
+  <footer class="foot">
+    <p>Study aid for the B.Sc. thesis at Brac University, October 2026. The thesis PDF is the authoritative source; every number here is copied from it.</p>
+  </footer>
+</div>
+</div>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p><button type="button" class="close">Close</button></dialog>
+<script type="module" src="../assets/site.js"></script>
+</body>
+</html>

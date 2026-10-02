@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview | CP-FIM thesis study guide</title>
+<meta name="description" content="Illustrated study guide for the BRAC University thesis on selective unlearning for temporal regression (CP-FIM).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%272%27 y=%274%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3Crect x=%277%27 y=%2712%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%232a78d6%27/%3E%3Crect x=%2712%27 y=%2720%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+options:{ignoreHtmlClass:'mermaid'},chtml:{scale:0.98}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="side" id="side">
+  <a class="brand" href="index.html">CP-FIM thesis<br><span>study guide</span></a>
+  <nav aria-label="Chapters"><a class="side-home active" href="index.html">Overview</a><ol><li><a href="docs/01_big_picture.html"><span class="n">1</span>The big picture</a></li><li><a href="docs/02_background_and_literature.html"><span class="n">2</span>Background and literature</a></li><li><a href="docs/03_data_and_deletion.html"><span class="n">3</span>Data and deletion requests</a></li><li><a href="docs/04_models_and_training.html"><span class="n">4</span>Forecasting models, training regimes and the experiment grid</a></li><li><a href="docs/05_cpfim_method.html"><span class="n">5</span>CP-FIM: the proposed method</a></li><li><a href="docs/06_comparison_methods.html"><span class="n">6</span>Comparison methods, design alternatives and ablations</a></li><li><a href="docs/07_evaluation_metrics.html"><span class="n">7</span>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></li><li><a href="docs/08_results.html"><span class="n">8</span>Results</a></li><li><a href="docs/09_fixes_statistics_robustness.html"><span class="n">9</span>Issues found and fixed, statistics and robustness</a></li><li><a href="docs/10_conclusion_and_impact.html"><span class="n">10</span>Conclusion, contributions, limitations, future work and impact</a></li><li><a href="docs/11_cheat_sheet.html"><span class="n">11</span>Cheat sheet: every key number, formula and term on one page</a></li><li><a href="docs/12_viva_questions.html"><span class="n">12</span>Viva / defence Q&amp;A</a></li><li><a href="docs/13_figure_atlas.html"><span class="n">13</span>Figure atlas: every figure in this repository</a></li></ol></nav>
+  <div class="side-foot">
+    <button type="button" class="theme" id="theme" aria-pressed="false">Dark mode</button>
+    <a href="https://github.com/Tariq-15/temp111">Source on GitHub</a>
+  </div>
+</aside>
+<div class="main-wrap">
+  <div class="topbar">
+    <button type="button" class="menu" id="menu" aria-controls="side" aria-expanded="false">Chapters</button>
+    <a class="top-brand" href="index.html">CP-FIM thesis study guide</a>
+  </div>
+  <main id="main" class="content">
+  <section class="hero">
+  <p class="kicker">B.Sc. thesis, Department of Computer Science and Engineering, Brac University, October 2026</p>
+  <h1 class="hero-title">Evaluating Selective Unlearning for Temporal Regression Models: CP‑FIM and Retrain-Referenced Evidence on Financial and Energy Time Series</h1>
+  <p class="hero-authors">Md. Tariquzzaman, Anirban Saha, Sharaf Binte Younus and Sadia Binte Kamal</p>
+  <p class="hero-sup">Supervised by Dr. Md. Golam Rabiul Alam, Professor, Department of CSE</p>
+  <div class="hero-strip">
+    <svg class="windows big" viewBox="-2 -2 656 123" role="navigation" aria-label="Chapters, drawn as overlapping sliding windows"><line class="axis" x1="0" y1="105" x2="652" y2="105"/><line class="tick" x1="0" y1="102" x2="0" y2="108"/><line class="tick" x1="22" y1="102" x2="22" y2="108"/><line class="tick" x1="44" y1="102" x2="44" y2="108"/><line class="tick" x1="66" y1="102" x2="66" y2="108"/><line class="tick" x1="88" y1="102" x2="88" y2="108"/><line class="tick" x1="110" y1="102" x2="110" y2="108"/><line class="tick" x1="132" y1="102" x2="132" y2="108"/><line class="tick" x1="154" y1="102" x2="154" y2="108"/><line class="tick" x1="176" y1="102" x2="176" y2="108"/><line class="tick" x1="198" y1="102" x2="198" y2="108"/><line class="tick" x1="220" y1="102" x2="220" y2="108"/><line class="tick" x1="242" y1="102" x2="242" y2="108"/><line class="tick" x1="264" y1="102" x2="264" y2="108"/><line class="tick" x1="286" y1="102" x2="286" y2="108"/><line class="tick" x1="308" y1="102" x2="308" y2="108"/><line class="tick" x1="330" y1="102" x2="330" y2="108"/><line class="tick" x1="352" y1="102" x2="352" y2="108"/><line class="tick" x1="374" y1="102" x2="374" y2="108"/><line class="tick" x1="396" y1="102" x2="396" y2="108"/><line class="tick" x1="418" y1="102" x2="418" y2="108"/><line class="tick" x1="440" y1="102" x2="440" y2="108"/><line class="tick" x1="462" y1="102" x2="462" y2="108"/><line class="tick" x1="484" y1="102" x2="484" y2="108"/><line class="tick" x1="506" y1="102" x2="506" y2="108"/><line class="tick" x1="528" y1="102" x2="528" y2="108"/><line class="tick" x1="550" y1="102" x2="550" y2="108"/><line class="tick" x1="572" y1="102" x2="572" y2="108"/><line class="tick" x1="594" y1="102" x2="594" y2="108"/><line class="tick" x1="616" y1="102" x2="616" y2="108"/><line class="tick" x1="638" y1="102" x2="638" y2="108"/><a href="docs/01_big_picture.html" class="win " aria-label="Chapter 1: The big picture"><title>1. The big picture</title><rect x="0" y="0" width="124" height="26" rx="6"/><text x="12" y="17.5">1<tspan class="lbl" dx="8">Big picture</tspan></text></a><a href="docs/02_background_and_literature.html" class="win " aria-label="Chapter 2: Background and literature"><title>2. Background and literature</title><rect x="44" y="33" width="124" height="26" rx="6"/><text x="56" y="50.5">2<tspan class="lbl" dx="8">Literature</tspan></text></a><a href="docs/03_data_and_deletion.html" class="win " aria-label="Chapter 3: Data and deletion requests"><title>3. Data and deletion requests</title><rect x="88" y="66" width="124" height="26" rx="6"/><text x="100" y="83.5">3<tspan class="lbl" dx="8">Data</tspan></text></a><a href="docs/04_models_and_training.html" class="win " aria-label="Chapter 4: Forecasting models, training regimes and the experiment grid"><title>4. Forecasting models, training regimes and the experiment grid</title><rect x="132" y="0" width="124" height="26" rx="6"/><text x="144" y="17.5">4<tspan class="lbl" dx="8">Models</tspan></text></a><a href="docs/05_cpfim_method.html" class="win " aria-label="Chapter 5: CP-FIM: the proposed method"><title>5. CP-FIM: the proposed method</title><rect x="176" y="33" width="124" height="26" rx="6"/><text x="188" y="50.5">5<tspan class="lbl" dx="8">CP-FIM</tspan></text></a><a href="docs/06_comparison_methods.html" class="win " aria-label="Chapter 6: Comparison methods, design alternatives and ablations"><title>6. Comparison methods, design alternatives and ablations</title><rect x="220" y="66" width="124" height="26" rx="6"/><text x="232" y="83.5">6<tspan class="lbl" dx="8">Methods</tspan></text></a><a href="docs/07_evaluation_metrics.html" class="win " aria-label="Chapter 7: Evaluation metrics: how &quot;unlearning worked?&quot; is measured"><title>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</title><rect x="264" y="0" width="124" height="26" rx="6"/><text x="276" y="17.5">7<tspan class="lbl" dx="8">Metrics</tspan></text></a><a href="docs/08_results.html" class="win " aria-label="Chapter 8: Results"><title>8. Results</title><rect x="308" y="33" width="124" height="26" rx="6"/><text x="320" y="50.5">8<tspan class="lbl" dx="8">Results</tspan></text></a><a href="docs/09_fixes_statistics_robustness.html" class="win " aria-label="Chapter 9: Issues found and fixed, statistics and robustness"><title>9. Issues found and fixed, statistics and robustness</title><rect x="352" y="66" width="124" height="26" rx="6"/><text x="364" y="83.5">9<tspan class="lbl" dx="8">Fixes, stats</tspan></text></a><a href="docs/10_conclusion_and_impact.html" class="win " aria-label="Chapter 10: Conclusion, contributions, limitations, future work and impact"><title>10. Conclusion, contributions, limitations, future work and impact</title><rect x="396" y="0" width="124" height="26" rx="6"/><text x="408" y="17.5">10<tspan class="lbl" dx="8">Conclusion</tspan></text></a><a href="docs/11_cheat_sheet.html" class="win " aria-label="Chapter 11: Cheat sheet: every key number, formula and term on one page"><title>11. Cheat sheet: every key number, formula and term on one page</title><rect x="440" y="33" width="124" height="26" rx="6"/><text x="452" y="50.5">11<tspan class="lbl" dx="8">Cheat sheet</tspan></text></a><a href="docs/12_viva_questions.html" class="win " aria-label="Chapter 12: Viva / defence Q&amp;A"><title>12. Viva / defence Q&amp;A</title><rect x="484" y="66" width="124" height="26" rx="6"/><text x="496" y="83.5">12<tspan class="lbl" dx="8">Viva Q&amp;A</tspan></text></a><a href="docs/13_figure_atlas.html" class="win " aria-label="Chapter 13: Figure atlas: every figure in this repository"><title>13. Figure atlas: every figure in this repository</title><rect x="528" y="0" width="124" height="26" rx="6"/><text x="540" y="17.5">13<tspan class="lbl" dx="8">Figures</tspan></text></a></svg>
+    <p class="strip-label">Thirteen chapters, drawn the way the thesis draws its training data: as overlapping sliding windows. Pick any window to start reading.</p>
+  </div>
+</section>
+  <p><strong>Read it as a website: https://tariq-15.github.io/temp111/</strong> (sidebar navigation, rendered equations and diagrams, click-to-zoom figures, dark mode).</p>
+<p>This guide explains the whole thesis with figures. You should be able to understand it, explain it and defend it without opening the 109-page PDF. Every number here was copied from the final thesis source (chapters, tables and figure captions). Where this guide names a table or figure, it uses the thesis numbering (for example &quot;Table 5.6&quot;) so you can find it in the PDF.</p>
+<figure><a class="zoom" href="figures/summary/00_thesis_at_a_glance.png"><img loading="lazy" src="figures/summary/00_thesis_at_a_glance.png" alt="The thesis in eight numbers" /></a></figure>
+<hr />
+<h2 id="the-thesis-in-60-seconds">The thesis in 60 seconds <a class="header-anchor" href="#the-thesis-in-60-seconds">#</a></h2>
+<ol>
+<li><strong>The problem.</strong> A trained model keeps traces of its training data. If someone asks for data to be deleted (GDPR &quot;right to erasure&quot;), or the data was wrong or unusual, the model has to <em>forget</em> it. Retraining from scratch without that data is the gold standard, but it is expensive. <strong>Machine unlearning</strong> tries to update the existing model cheaply instead.</li>
+<li><strong>Why forecasting is harder.</strong> Forecasting models learn from overlapping <em>sliding windows</em>. Two neighbouring windows can share about 98% of their values, so deleting one window does not delete the data inside it. What &quot;delete&quot; means has to be defined carefully.</li>
+<li><strong>What we built.</strong> <strong>CP-FIM</strong> (Contrast-Preconditioned Fisher Information Matrix unlearning): a teacher–student update that (a) scales changes by how much each parameter matters to the forget data versus the retain data, (b) uses the <em>teacher's own forecast plus small noise</em> as the forget target, and (c) balances forgetting and retaining with a safeguarded Pareto (MGDA) weight.</li>
+<li><strong>How we tested it.</strong> 8 datasets (4 financial, 4 ETT electricity), 5 model types (LSTM, GRU, BiLSTM, CNN-LSTM, PatchTST), 2 training regimes, 3 deletion styles, 12 methods + 15 ablations + 5 controls. In total: <strong>104 configurations and 9,984 method runs, with 0 failures, in about 74 GPU-hours.</strong> Every method was judged against a model <strong>retrained</strong> without the deleted data.</li>
+<li><strong>Headline result.</strong> CP-FIM is <strong>closer to retraining than the TS-Unlearn-inspired direct-noise method in 56 of 56 settings (310 of 312 runs)</strong>. The median gap is <strong>12.2×</strong>. CP-FIM is also closer than <strong>all five aggressive methods in 56/56 settings</strong>. Its test error stayed between <strong>−1.8% and +4.4%</strong> of the original in <strong>every one of the 312 runs</strong>.</li>
+<li><strong>The honest limit (scope).</strong> CP-FIM is <em>stable but conservative</em>. It beats &quot;doing nothing&quot; in only 22 of 56 settings, and retain-only fine-tuning in only 15. The financial price-level models lose to a simple &quot;tomorrow = today&quot; forecast, so <strong>ETT is the main evidence</strong>.</li>
+<li><strong>What the evaluation itself found.</strong> Random-window deletion (the protocol TS-Unlearn uses) removes almost no unique information. Block and time-stamp deletion remove much more. A loss-based membership test and prediction agreement can disagree. Unconstrained Pareto distillation <strong>stalls at step 1</strong>. We found this, explained it and fixed it.</li>
+</ol>
+<hr />
+<h2 id="the-whole-thesis-in-one-diagram">The whole thesis in one diagram <a class="header-anchor" href="#the-whole-thesis-in-one-diagram">#</a></h2>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    A[&quot;Deletion request&lt;br/&gt;(crisis periods, random /&lt;br/&gt;block / time-stamp)&quot;] --&gt; B[&quot;Dependency closure&lt;br/&gt;forget set D_f, retain set D_r&quot;]
+    B --&gt; C[&quot;Original model θ₀&lt;br/&gt;trained on all data&quot;]
+    B --&gt; D[&quot;Oracle θr&lt;br/&gt;retrained on D_r only&lt;br/&gt;(gold standard)&quot;]
+    C --&gt; E[&quot;Unlearning methods&lt;br/&gt;CP-FIM + 10 others&lt;br/&gt;+ 15 ablations + 5 controls&quot;]
+    E --&gt; F[&quot;Compare with oracle&lt;br/&gt;disagreement · DSR · RNC&lt;br/&gt;AUC · test-error ratio&quot;]
+    D --&gt; F
+    F --&gt; G[&quot;Findings&lt;br/&gt;56/56 vs direct noise&lt;br/&gt;0 runs &gt;10% worse&lt;br/&gt;conservative: 22/56 vs no-op&quot;]
+    style E fill:#dbe8fb,stroke:#2a78d6
+    style D fill:#d6f2e7,stroke:#1baf7a
+    style G fill:#fde3d7,stroke:#eb6834
+</pre></div>
+<hr />
+<h2 id="how-to-study-this-repo">How to study this repo <a class="header-anchor" href="#how-to-study-this-repo">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Guide chapter</th>
+<th>What you will learn</th>
+<th>Thesis chapter</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="docs/01_big_picture.html">The big picture</a></td>
+<td>Unlearning, sliding windows, the three outcomes, research questions</td>
+<td>Ch 1</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="docs/02_background_and_literature.html">Background and literature</a></td>
+<td>Key concepts and the 44 cited works, grouped by idea</td>
+<td>Ch 2</td>
+<td>25 min</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="docs/03_data_and_deletion.html">Data and deletion requests</a></td>
+<td>Datasets, leakage control, crisis periods, 3 ETT protocols, dependency closure</td>
+<td>Ch 4.4</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="docs/04_models_and_training.html">Models and training regimes</a></td>
+<td>LSTM / GRU / BiLSTM / CNN-LSTM / PatchTST, standard vs high-capacity, the grid</td>
+<td>Ch 4.5, 4.8</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="docs/05_cpfim_method.html">CP-FIM: the method</a></td>
+<td>All 5 steps, the equations, the algorithm, safeguards, why it is stable</td>
+<td>Ch 4.1–4.3</td>
+<td>40 min</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="docs/06_comparison_methods.html">Comparison methods and ablations</a></td>
+<td>M1–M13, FT, 15 ablations, 5 update-matched controls, design alternatives</td>
+<td>Ch 4.2, 4.6</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="docs/07_evaluation_metrics.html">Evaluation metrics</a></td>
+<td>Disagreement, DSR, RNC, loss-attack AUC, persistence gate, stability</td>
+<td>Ch 4.7, 5.1.1</td>
+<td>25 min</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="docs/08_results.html">Results</a></td>
+<td>Findings 1–8 with every result figure, explained</td>
+<td>Ch 5.1–5.2</td>
+<td>45 min</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="docs/09_fixes_statistics_robustness.html">Fixes, statistics and robustness</a></td>
+<td>Pareto stall, attention-dropout defect, finance pilot, sign tests</td>
+<td>Ch 5.3–5.5</td>
+<td>20 min</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="docs/10_conclusion_and_impact.html">Conclusion, impact and future work</a></td>
+<td>Contributions, limitations, future work, societal / ethical / cost analysis</td>
+<td>Ch 3, 5.6, 6</td>
+<td>15 min</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="docs/11_cheat_sheet.html">Cheat sheet</a></td>
+<td>Every key number, formula and abbreviation on one page</td>
+<td>All</td>
+<td>revise</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="docs/12_viva_questions.html">Viva / defence Q&amp;A</a></td>
+<td>40+ likely examiner questions with model answers</td>
+<td>All</td>
+<td>practise</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="docs/13_figure_atlas.html">Figure atlas</a></td>
+<td>All 75 figures in this repo with captions and where they fit</td>
+<td>All</td>
+<td>browse</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>If you only have 10 minutes:</strong> read this page, then the <a href="docs/11_cheat_sheet.html">cheat sheet</a>, then look at the four key figures below.</p>
+<hr />
+<h2 id="four-figures-that-tell-the-story">Four figures that tell the story <a class="header-anchor" href="#four-figures-that-tell-the-story">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="zoom" href="figures/thesis/results/fig8_cpfim_vs_direct_noise.png"><img loading="lazy" src="figures/thesis/results/fig8_cpfim_vs_direct_noise.png" alt="" /></a></td>
+<td><strong>Main result (Fig 5.9).</strong> Each dot is one paired run. x = CP-FIM's distance to the retrained model, y = the direct-noise method's distance. Dots above the dashed line mean CP-FIM is closer. That is <strong>310 of 312</strong> runs.</td>
+</tr>
+<tr>
+<td><a class="zoom" href="figures/thesis/results/fig9_test_error_safety.png"><img loading="lazy" src="figures/thesis/results/fig9_test_error_safety.png" alt="" /></a></td>
+<td><strong>Stability (Fig 5.8).</strong> Test error after unlearning divided by the original test error, for every run of every method. CP-FIM (blue) is the tightest cluster, at <strong>−1.8% to +4.4%</strong>. Aggressive methods reach up to <strong>12,866×</strong> worse.</td>
+</tr>
+<tr>
+<td><a class="zoom" href="figures/thesis/results/fig10_tradeoff_map.png"><img loading="lazy" src="figures/thesis/results/fig10_tradeoff_map.png" alt="" /></a></td>
+<td><strong>Trade-off map (Fig 5.11).</strong> The gentle methods (including CP-FIM) sit on the original model. The overshooting methods end 12–28× farther from retraining <em>and</em> hurt accuracy. The retraining target (green) is to the left: no method reaches it.</td>
+</tr>
+<tr>
+<td><a class="zoom" href="figures/thesis/results/fig7_deletion_signal_vs_unique_support.png"><img loading="lazy" src="figures/thesis/results/fig7_deletion_signal_vs_unique_support.png" alt="" /></a></td>
+<td><strong>Deletion design matters (Fig 5.5).</strong> Random-window deletion removes almost no unique raw data (16–32 time steps), so the deletion barely changes the retrained model. Block and time-stamp deletion remove hundreds to thousands of time steps.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="what-the-evidence-supports-claim-scorecard-table-522">What the evidence supports (claim scorecard, Table 5.22) <a class="header-anchor" href="#what-the-evidence-supports-claim-scorecard-table-522">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Supported?</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CP-FIM is closer to retraining than the direct-noise adaptation</td>
+<td>✅ Yes</td>
+<td>56/56 settings, 310/312 runs, median 12.2×</td>
+</tr>
+<tr>
+<td>CP-FIM is closer to retraining than all aggressive baselines</td>
+<td>✅ Yes</td>
+<td>56/56 settings each (M3, M10, M11, M12, M13)</td>
+</tr>
+<tr>
+<td>CP-FIM changed test error by at most +4.4%</td>
+<td>✅ Yes</td>
+<td>all 312 runs; 0 runs &gt;10% worse</td>
+</tr>
+<tr>
+<td>The result survives the known attention-dropout defect</td>
+<td>✅ Yes</td>
+<td>44/44 unaffected settings (203/204 runs)</td>
+</tr>
+<tr>
+<td>CP-FIM is closer to retraining than doing nothing</td>
+<td>❌ No</td>
+<td>only 22/56 settings</td>
+</tr>
+<tr>
+<td>CP-FIM is the closest method to retraining</td>
+<td>❌ No</td>
+<td>mean rank 6th of 11 (4.43)</td>
+</tr>
+<tr>
+<td>CP-FIM's Fisher contrast improves unlearning</td>
+<td>❌ No</td>
+<td>ablations: under 2% of the gap</td>
+</tr>
+<tr>
+<td>CP-FIM gives a privacy guarantee</td>
+<td>❌ No</td>
+<td>not tested; the loss attack is exploratory</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>How to say it in the defence:</strong> <em>&quot;CP-FIM is a stable unlearning method. It never damaged the forecaster, and it beat the direct-noise approach in every setting. The evaluation also showed that how you define deletion decides what you can measure.&quot;</em> Then give the limits as scope, not as the headline.</p>
+</blockquote>
+<hr />
+<h2 id="repository-map">Repository map <a class="header-anchor" href="#repository-map">#</a></h2>
+<pre><code>README.md                    ← you are here
+docs/                        ← the 13 guide chapters
+figures/
+  thesis/methodology/        ← 11 methodology diagrams used in the thesis
+  thesis/results/            ← 12 result figures used in the thesis (fig1–fig11 + protocols)
+  tikz/                      ← 4 diagrams drawn in LaTeX/TikZ in the thesis, rendered to PNG
+  flowcharts/                ← 38 extra flowcharts (data prep, each method, each metric, ...)
+  summary/                   ← 10 new summary charts made from the thesis tables for this guide
+tools/
+  make_summary_charts.py     ← rebuilds figures/summary (all numbers cited to thesis tables)
+  tikz_figures.tex           ← the 4 TikZ figures, copied verbatim from the thesis source
+  build_site.py              ← turns README + docs into the website (site_assets/ holds its CSS and JS)
+.github/workflows/site.yml   ← rebuilds and republishes the website on every push to main
+</code></pre>
+<p><strong>Website:</strong> every push to <code>main</code> rebuilds the site and publishes it to the <code>gh-pages</code> branch, which GitHub Pages serves. To preview it locally, run <code>pip install markdown-it-py mdit-py-plugins</code>, then <code>python tools/build_site.py</code>, then open <code>_site/index.html</code> through any local web server.</p>
+<p><strong>Figure count:</strong> 23 thesis figures + 4 TikZ + 38 flowcharts + 10 summary charts = <strong>75 figures</strong>, plus Mermaid diagrams drawn directly in the chapters.</p>
+<hr />
+<h2 id="experiment-at-a-glance">Experiment at a glance <a class="header-anchor" href="#experiment-at-a-glance">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Datasets</td>
+<td>SP500, NASDAQ, MultiStock (20 stocks), MixedAssets (gold, oil, US 10-yr yield, EUR/USD); ETTh1, ETTh2, ETTm1, ETTm2</td>
+</tr>
+<tr>
+<td>Models</td>
+<td>LSTM, GRU, BiLSTM, CNN-LSTM (finance); PatchTST (ETT)</td>
+</tr>
+<tr>
+<td>Training regimes</td>
+<td>Standard (width 128, dropout 0.3, early stopping) and high-capacity (width 256, no dropout, 500–1,000 epochs)</td>
+</tr>
+<tr>
+<td>Deletion requests</td>
+<td>Finance: 5 crisis periods (time-stamp + closure). ETT: random windows (20%), block windows (20%), time stamps (20% of raw steps + all dependent windows)</td>
+</tr>
+<tr>
+<td>Methods</td>
+<td>12 (incl. original M1 and retrain M2) + 15 ablations + 5 update-matched controls = 32 variants per seed</td>
+</tr>
+<tr>
+<td>Seeds</td>
+<td>3 training seeds (42, 43, 44); oracle seed = seed + 7000; ETT also uses 3 request seeds (101, 202, 303)</td>
+</tr>
+<tr>
+<td>Scale</td>
+<td>104 configurations · 9,984 method runs · 56 aggregate settings · 312 paired runs per method</td>
+</tr>
+<tr>
+<td>Hardware</td>
+<td>1 × NVIDIA RTX 4070 Ti SUPER (16 GB), about 74 GPU-hours</td>
+</tr>
+<tr>
+<td>Software</td>
+<td>Python 3.11, PyTorch 2.11 + CUDA 12.8, NumPy, pandas, scikit-learn, Matplotlib, Jupyter</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><em>This guide is a study aid. The thesis PDF is the authoritative source. If a number here ever disagrees with the PDF, trust the PDF.</em></p>
+
+  
+  </main>
+  <footer class="foot">
+    <p>Study aid for the B.Sc. thesis at Brac University, October 2026. The thesis PDF is the authoritative source; every number here is copied from it.</p>
+  </footer>
+</div>
+</div>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p><button type="button" class="close">Close</button></dialog>
+<script type="module" src="assets/site.js"></script>
+</body>
+</html>

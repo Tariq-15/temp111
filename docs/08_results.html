@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results | CP-FIM thesis study guide</title>
+<meta name="description" content="Illustrated study guide for the BRAC University thesis on selective unlearning for temporal regression (CP-FIM).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%272%27 y=%274%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3Crect x=%277%27 y=%2712%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%232a78d6%27/%3E%3Crect x=%2712%27 y=%2720%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+options:{ignoreHtmlClass:'mermaid'},chtml:{scale:0.98}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="side" id="side">
+  <a class="brand" href="../index.html">CP-FIM thesis<br><span>study guide</span></a>
+  <nav aria-label="Chapters"><a class="side-home" href="../index.html">Overview</a><ol><li><a href="../docs/01_big_picture.html"><span class="n">1</span>The big picture</a></li><li><a href="../docs/02_background_and_literature.html"><span class="n">2</span>Background and literature</a></li><li><a href="../docs/03_data_and_deletion.html"><span class="n">3</span>Data and deletion requests</a></li><li><a href="../docs/04_models_and_training.html"><span class="n">4</span>Forecasting models, training regimes and the experiment grid</a></li><li><a href="../docs/05_cpfim_method.html"><span class="n">5</span>CP-FIM: the proposed method</a></li><li><a href="../docs/06_comparison_methods.html"><span class="n">6</span>Comparison methods, design alternatives and ablations</a></li><li><a href="../docs/07_evaluation_metrics.html"><span class="n">7</span>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></li><li><a href="../docs/08_results.html" class="active" aria-current="page"><span class="n">8</span>Results</a></li><li><a href="../docs/09_fixes_statistics_robustness.html"><span class="n">9</span>Issues found and fixed, statistics and robustness</a></li><li><a href="../docs/10_conclusion_and_impact.html"><span class="n">10</span>Conclusion, contributions, limitations, future work and impact</a></li><li><a href="../docs/11_cheat_sheet.html"><span class="n">11</span>Cheat sheet: every key number, formula and term on one page</a></li><li><a href="../docs/12_viva_questions.html"><span class="n">12</span>Viva / defence Q&amp;A</a></li><li><a href="../docs/13_figure_atlas.html"><span class="n">13</span>Figure atlas: every figure in this repository</a></li></ol></nav>
+  <div class="side-foot">
+    <button type="button" class="theme" id="theme" aria-pressed="false">Dark mode</button>
+    <a href="https://github.com/Tariq-15/temp111">Source on GitHub</a>
+  </div>
+</aside>
+<div class="main-wrap">
+  <div class="topbar">
+    <button type="button" class="menu" id="menu" aria-controls="side" aria-expanded="false">Chapters</button>
+    <a class="top-brand" href="../index.html">CP-FIM thesis study guide</a>
+  </div>
+  <main id="main" class="content">
+  <div class="strip"><svg class="windows" viewBox="-2 -2 656 123" role="navigation" aria-label="Chapters, drawn as overlapping sliding windows"><line class="axis" x1="0" y1="105" x2="652" y2="105"/><line class="tick" x1="0" y1="102" x2="0" y2="108"/><line class="tick" x1="22" y1="102" x2="22" y2="108"/><line class="tick" x1="44" y1="102" x2="44" y2="108"/><line class="tick" x1="66" y1="102" x2="66" y2="108"/><line class="tick" x1="88" y1="102" x2="88" y2="108"/><line class="tick" x1="110" y1="102" x2="110" y2="108"/><line class="tick" x1="132" y1="102" x2="132" y2="108"/><line class="tick" x1="154" y1="102" x2="154" y2="108"/><line class="tick" x1="176" y1="102" x2="176" y2="108"/><line class="tick" x1="198" y1="102" x2="198" y2="108"/><line class="tick" x1="220" y1="102" x2="220" y2="108"/><line class="tick" x1="242" y1="102" x2="242" y2="108"/><line class="tick" x1="264" y1="102" x2="264" y2="108"/><line class="tick" x1="286" y1="102" x2="286" y2="108"/><line class="tick" x1="308" y1="102" x2="308" y2="108"/><line class="tick" x1="330" y1="102" x2="330" y2="108"/><line class="tick" x1="352" y1="102" x2="352" y2="108"/><line class="tick" x1="374" y1="102" x2="374" y2="108"/><line class="tick" x1="396" y1="102" x2="396" y2="108"/><line class="tick" x1="418" y1="102" x2="418" y2="108"/><line class="tick" x1="440" y1="102" x2="440" y2="108"/><line class="tick" x1="462" y1="102" x2="462" y2="108"/><line class="tick" x1="484" y1="102" x2="484" y2="108"/><line class="tick" x1="506" y1="102" x2="506" y2="108"/><line class="tick" x1="528" y1="102" x2="528" y2="108"/><line class="tick" x1="550" y1="102" x2="550" y2="108"/><line class="tick" x1="572" y1="102" x2="572" y2="108"/><line class="tick" x1="594" y1="102" x2="594" y2="108"/><line class="tick" x1="616" y1="102" x2="616" y2="108"/><line class="tick" x1="638" y1="102" x2="638" y2="108"/><a href="01_big_picture.html" class="win done" aria-label="Chapter 1: The big picture"><title>1. The big picture</title><rect x="0" y="0" width="124" height="26" rx="6"/><text x="12" y="17.5">1<tspan class="lbl" dx="8">Big picture</tspan></text></a><a href="02_background_and_literature.html" class="win done" aria-label="Chapter 2: Background and literature"><title>2. Background and literature</title><rect x="44" y="33" width="124" height="26" rx="6"/><text x="56" y="50.5">2<tspan class="lbl" dx="8">Literature</tspan></text></a><a href="03_data_and_deletion.html" class="win done" aria-label="Chapter 3: Data and deletion requests"><title>3. Data and deletion requests</title><rect x="88" y="66" width="124" height="26" rx="6"/><text x="100" y="83.5">3<tspan class="lbl" dx="8">Data</tspan></text></a><a href="04_models_and_training.html" class="win done" aria-label="Chapter 4: Forecasting models, training regimes and the experiment grid"><title>4. Forecasting models, training regimes and the experiment grid</title><rect x="132" y="0" width="124" height="26" rx="6"/><text x="144" y="17.5">4<tspan class="lbl" dx="8">Models</tspan></text></a><a href="05_cpfim_method.html" class="win done" aria-label="Chapter 5: CP-FIM: the proposed method"><title>5. CP-FIM: the proposed method</title><rect x="176" y="33" width="124" height="26" rx="6"/><text x="188" y="50.5">5<tspan class="lbl" dx="8">CP-FIM</tspan></text></a><a href="06_comparison_methods.html" class="win done" aria-label="Chapter 6: Comparison methods, design alternatives and ablations"><title>6. Comparison methods, design alternatives and ablations</title><rect x="220" y="66" width="124" height="26" rx="6"/><text x="232" y="83.5">6<tspan class="lbl" dx="8">Methods</tspan></text></a><a href="07_evaluation_metrics.html" class="win done" aria-label="Chapter 7: Evaluation metrics: how &quot;unlearning worked?&quot; is measured"><title>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</title><rect x="264" y="0" width="124" height="26" rx="6"/><text x="276" y="17.5">7<tspan class="lbl" dx="8">Metrics</tspan></text></a><a href="08_results.html" class="win current" aria-label="Chapter 8: Results" aria-current="page"><title>8. Results</title><rect x="308" y="33" width="124" height="26" rx="6"/><text x="320" y="50.5">8<tspan class="lbl" dx="8">Results</tspan></text></a><a href="09_fixes_statistics_robustness.html" class="win " aria-label="Chapter 9: Issues found and fixed, statistics and robustness"><title>9. Issues found and fixed, statistics and robustness</title><rect x="352" y="66" width="124" height="26" rx="6"/><text x="364" y="83.5">9<tspan class="lbl" dx="8">Fixes, stats</tspan></text></a><a href="10_conclusion_and_impact.html" class="win " aria-label="Chapter 10: Conclusion, contributions, limitations, future work and impact"><title>10. Conclusion, contributions, limitations, future work and impact</title><rect x="396" y="0" width="124" height="26" rx="6"/><text x="408" y="17.5">10<tspan class="lbl" dx="8">Conclusion</tspan></text></a><a href="11_cheat_sheet.html" class="win " aria-label="Chapter 11: Cheat sheet: every key number, formula and term on one page"><title>11. Cheat sheet: every key number, formula and term on one page</title><rect x="440" y="33" width="124" height="26" rx="6"/><text x="452" y="50.5">11<tspan class="lbl" dx="8">Cheat sheet</tspan></text></a><a href="12_viva_questions.html" class="win " aria-label="Chapter 12: Viva / defence Q&amp;A"><title>12. Viva / defence Q&amp;A</title><rect x="484" y="66" width="124" height="26" rx="6"/><text x="496" y="83.5">12<tspan class="lbl" dx="8">Viva Q&amp;A</tspan></text></a><a href="13_figure_atlas.html" class="win " aria-label="Chapter 13: Figure atlas: every figure in this repository"><title>13. Figure atlas: every figure in this repository</title><rect x="528" y="0" width="124" height="26" rx="6"/><text x="540" y="17.5">13<tspan class="lbl" dx="8">Figures</tspan></text></a></svg></div><header class="chapter-head"><p class="chapter-num">Chapter 8 of 13</p><h1>Results</h1><p class="chapter-sub">Thesis Chapter 5, Sections 5.1–5.2</p></header>
+  <p>All <strong>104 configurations</strong> completed, producing <strong>9,984 method runs with 0 failures</strong>.</p>
+<hr />
+<h2 id="results-at-a-glance">Results at a glance <a class="header-anchor" href="#results-at-a-glance">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Finding</th>
+<th>One-line takeaway</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>★</td>
+<td><strong>Main result</strong></td>
+<td>CP-FIM is closer to retraining than direct noise in <strong>56/56 settings, 310/312 runs, median 12.2×</strong></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Base models</td>
+<td>PatchTST on ETT beats persistence; <strong>all financial models lose badly</strong>, so <strong>ETT is the main evidence</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Anything to forget?</td>
+<td><strong>Random-window deletion removes almost nothing unique</strong> (DSR ≈ 1); block and time-stamp deletion do</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Membership test</td>
+<td>Retraining removes the signal for block/time-stamp deletion, but not random; aggressive methods push AUC <em>below</em> the oracle (Streisand effect)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Errors vs retraining</td>
+<td>No method reaches retraining. Gentle methods <strong>under-forget</strong>; aggressive methods <strong>over-forget</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Stability</strong></td>
+<td>CP-FIM: test error <strong>−1.8% to +4.4%</strong> in all 312 runs, <strong>0 runs &gt; 10% worse</strong>. Direct noise: 145 runs ≥ 50% worse</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Against every method</td>
+<td>CP-FIM wins <strong>56/56</strong> against all 5 aggressive methods; it usually loses narrowly to the gentle ones</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Gap closed (RNC)</td>
+<td>The best methods close about <strong>a quarter</strong> of the gap; CP-FIM about <strong>0</strong>, but it never moves away</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Ablations</td>
+<td>The <strong>teacher-anchored target</strong> drives stability; Fisher contrast and Pareto weight have small measured effects</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="finding-1-are-the-base-models-good-forecasters">Finding 1: Are the base models good forecasters? <a class="header-anchor" href="#finding-1-are-the-base-models-good-forecasters">#</a></h2>
+<p>Before judging unlearning, check that the original models beat <strong>persistence</strong> (&quot;next value = last value&quot;).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Model</th>
+<th style="text-align:right">Standard</th>
+<th style="text-align:right">High-cap.</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ETTh1</td>
+<td>PatchTST</td>
+<td style="text-align:right">0.28</td>
+<td style="text-align:right">0.35</td>
+<td>✅ better than persistence</td>
+</tr>
+<tr>
+<td>ETTh2</td>
+<td>PatchTST</td>
+<td style="text-align:right">0.65</td>
+<td style="text-align:right">0.84</td>
+<td>✅ better</td>
+</tr>
+<tr>
+<td>ETTm1</td>
+<td>PatchTST</td>
+<td style="text-align:right">0.22</td>
+<td style="text-align:right">0.26</td>
+<td>✅ better</td>
+</tr>
+<tr>
+<td>ETTm2</td>
+<td>PatchTST</td>
+<td style="text-align:right">0.59</td>
+<td style="text-align:right">0.72</td>
+<td>✅ better</td>
+</tr>
+<tr>
+<td>SP500</td>
+<td>4 recurrent</td>
+<td style="text-align:right">424–640</td>
+<td style="text-align:right">233–320</td>
+<td>❌ much worse</td>
+</tr>
+<tr>
+<td>NASDAQ</td>
+<td>4 recurrent</td>
+<td style="text-align:right">192–356</td>
+<td style="text-align:right">70–102</td>
+<td>❌ much worse</td>
+</tr>
+<tr>
+<td>MultiStock</td>
+<td>4 recurrent</td>
+<td style="text-align:right">22–76</td>
+<td style="text-align:right">16–35</td>
+<td>❌ much worse</td>
+</tr>
+<tr>
+<td>MixedAssets</td>
+<td>4 recurrent</td>
+<td style="text-align:right">73–95</td>
+<td style="text-align:right">73–104</td>
+<td>❌ much worse</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.2: test MSE / persistence MSE (below 1 = better than persistence).</em></p>
+<figure><a class="zoom" href="../figures/thesis/results/fig6_validity_gate.png"><img loading="lazy" src="../figures/thesis/results/fig6_validity_gate.png" alt="Validity gate" /></a><figcaption>Thesis Fig 5.2 (log scale). Circles = standard, triangles = high-capacity. The horizontal line is persistence. ETT points sit below it; finance points sit far above.</figcaption></figure>
+<p><strong>Why finance fails:</strong> the models predict <strong>price levels</strong>. In 2024 the S&amp;P 500, NASDAQ, gold and several stocks reached prices <strong>higher than anything in training</strong>, and recurrent networks cannot extrapolate beyond the range they have seen. → <strong>ETT is the main evidence</strong> for closeness to retraining. <strong>The stability results do not depend on forecasting skill</strong>, because every method is compared with the same original model. (A fix was tested in a pilot: see <a href="09_fixes_statistics_robustness.html#93-the-financial-forecasting-pilot">chapter 9</a>.)</p>
+<hr />
+<h2 id="finding-2-random-window-deletion-removes-almost-nothing-unique">Finding 2: Random-window deletion removes almost nothing unique <a class="header-anchor" href="#finding-2-random-window-deletion-removes-almost-nothing-unique">#</a></h2>
+<p>If deleting data does not change what a retrained model predicts, <strong>no</strong> unlearning method can show a meaningful effect. Measured with the <strong>DSR</strong> (original-to-oracle distance ÷ oracle-to-oracle distance).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>DSR standard</th>
+<th>DSR high-cap.</th>
+<th>Raw rows left with no support</th>
+<th>Windows deleted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ETT random</td>
+<td><strong>1.05</strong> (0.78–1.79)</td>
+<td><strong>0.91</strong> (0.81–1.64)</td>
+<td><strong>16–32</strong></td>
+<td>20%</td>
+</tr>
+<tr>
+<td>ETT block</td>
+<td>1.76 (1.10–4.17)</td>
+<td>2.41 (1.84–3.27)</td>
+<td>436–5,456</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>ETT time stamp</td>
+<td>1.67 (1.49–4.70)</td>
+<td>2.78 (1.92–4.25)</td>
+<td>1,820–6,928</td>
+<td>24–35%</td>
+</tr>
+<tr>
+<td>Finance crisis</td>
+<td>3.17 (0.67–63.0)</td>
+<td>4.74 (1.36–6.67)</td>
+<td>(not comparable)</td>
+<td>23–26%</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.3: median DSR over settings (range over datasets).</em></p>
+<figure><a class="zoom" href="../figures/thesis/results/fig1_deletion_signal_by_protocol.png"><img loading="lazy" src="../figures/thesis/results/fig1_deletion_signal_by_protocol.png" alt="DSR by protocol" /></a><figcaption>Thesis Fig 5.4. ETT markers = dataset mean over 3 requests; vertical lines = range over requests. Line at 1 = &quot;no bigger than the effect of a new seed&quot;. Random sits on 1; block and time-stamp sit clearly above it.</figcaption></figure>
+<figure><a class="zoom" href="../figures/thesis/results/fig7_deletion_signal_vs_unique_support.png"><img loading="lazy" src="../figures/thesis/results/fig7_deletion_signal_vs_unique_support.png" alt="DSR vs unique support" /></a><figcaption>Thesis Fig 5.5. Each ETT request: deletion signal vs share of raw training data that loses all support. Random deletion removes almost no unique data; block and time stamp remove much more. (A descriptive relation, not proof of cause.)</figcaption></figure>
+<p><strong>Details to remember:</strong></p>
+<ul>
+<li>Under random deletion, <strong>97.3–99.7%</strong> of deleted windows are <strong>fully covered by kept neighbours</strong>, and the nearest kept window is typically just <strong>4 steps</strong> away.</li>
+<li>One exception: ETTh2 random shows a somewhat larger DSR.</li>
+<li>Time stamps remove <strong>more windows (24–35%)</strong>, so part of their effect may come from the <strong>amount</strong>, not just the shape.</li>
+</ul>
+<blockquote>
+<p><strong>Implication:</strong> TS-Unlearn evaluates only random-window deletion. In our experiment that protocol barely changes the retrained model, so it cannot tell good unlearning from doing nothing.</p>
+</blockquote>
+<hr />
+<h2 id="finding-3-can-a-membership-test-still-detect-the-deleted-data">Finding 3: Can a membership test still detect the deleted data? <a class="header-anchor" href="#finding-3-can-a-membership-test-still-detect-the-deleted-data">#</a></h2>
+<p><strong>Standard training:</strong> the original models show <strong>no</strong> signal (AUC <strong>0.49–0.53</strong> for all protocols), even though DSR shows that block/time-stamp deletion <em>does</em> change the model. → The loss test is blind here.</p>
+<p><strong>High-capacity training:</strong> the original model is <strong>easy to detect</strong> (AUC ≈ <strong>0.97–0.98</strong>).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align:right">Random</th>
+<th style="text-align:right">Block</th>
+<th style="text-align:right">Time stamp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original (M1)</td>
+<td style="text-align:right">0.984</td>
+<td style="text-align:right">0.971</td>
+<td style="text-align:right">0.981</td>
+</tr>
+<tr>
+<td><strong>Retrain / oracle (M2)</strong></td>
+<td style="text-align:right"><strong>0.926</strong></td>
+<td style="text-align:right"><strong>0.490</strong></td>
+<td style="text-align:right"><strong>0.486</strong></td>
+</tr>
+<tr>
+<td>CP-FIM (M9)</td>
+<td style="text-align:right">0.983</td>
+<td style="text-align:right">0.971</td>
+<td style="text-align:right">0.981</td>
+</tr>
+<tr>
+<td>Retain fine-tuning (FT)</td>
+<td style="text-align:right">0.983</td>
+<td style="text-align:right">0.969</td>
+<td style="text-align:right">0.979</td>
+</tr>
+<tr>
+<td>Fisher noise + FT (M6)</td>
+<td style="text-align:right">0.981</td>
+<td style="text-align:right">0.969</td>
+<td style="text-align:right">0.976</td>
+</tr>
+<tr>
+<td>SCRUB-style (M5)</td>
+<td style="text-align:right">0.984</td>
+<td style="text-align:right">0.971</td>
+<td style="text-align:right">0.981</td>
+</tr>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right">0.486</td>
+<td style="text-align:right"><strong>0.347</strong></td>
+<td style="text-align:right">0.405</td>
+</tr>
+<tr>
+<td>Retain label (M13)</td>
+<td style="text-align:right">0.532</td>
+<td style="text-align:right">0.434</td>
+<td style="text-align:right">0.440</td>
+</tr>
+<tr>
+<td>Anchored gradient ascent (M3)</td>
+<td style="text-align:right">0.583</td>
+<td style="text-align:right">0.577</td>
+<td style="text-align:right">0.613</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.4: loss-attack AUC on the forget set, ETT high-capacity (mean of 36 runs). Closest to the oracle row is best.</em></p>
+<figure><a class="zoom" href="../figures/thesis/results/fig2_loss_attack_auc_ett_memorize.png"><img loading="lazy" src="../figures/thesis/results/fig2_loss_attack_auc_ett_memorize.png" alt="AUC by method" /></a><figcaption>Thesis Fig 5.6. Whiskers = 95% cluster-bootstrap intervals. Black line = retrained model.</figcaption></figure>
+<figure><a class="zoom" href="../figures/summary/09_membership_auc.png"><img loading="lazy" src="../figures/summary/09_membership_auc.png" alt="AUC summary chart" /></a><figcaption>Summary chart made from Table 5.4.</figcaption></figure>
+<p><strong>Reading it:</strong></p>
+<ol>
+<li>Retraining removes the signal for <strong>block and time-stamp</strong> deletion (0.97 → 0.49) but <strong>not for random</strong> (0.93). The random windows' kept neighbours are almost identical, so even the oracle still &quot;looks like&quot; it trained on them.</li>
+<li>The <strong>gentle methods</strong> (CP-FIM, FT, M6, M5) leave the signal where it was. They under-forget.</li>
+<li><strong>Direct noise and retain label</strong> push AUC <strong>below</strong> the oracle under block deletion (0.35, 0.43). The deleted windows now have <strong>higher</strong> loss than unseen data, so they stand out: the <strong>Streisand effect</strong> (Golatkar et al.).</li>
+<li>For time stamps, the direct-noise interval overlaps the oracle. Gradient ascent does not go below 0.5.</li>
+</ol>
+<hr />
+<h2 id="finding-4-forecast-errors-compared-with-retraining">Finding 4: Forecast errors compared with retraining <a class="header-anchor" href="#finding-4-forecast-errors-compared-with-retraining">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align:right">Forget (std)</th>
+<th style="text-align:right">Test (std)</th>
+<th style="text-align:right">Forget (high-cap)</th>
+<th style="text-align:right">Test (high-cap)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Original (M1)</td>
+<td style="text-align:right">0.91</td>
+<td style="text-align:right">0.99</td>
+<td style="text-align:right">0.32</td>
+<td style="text-align:right">0.99</td>
+</tr>
+<tr>
+<td>CP-FIM (M9)</td>
+<td style="text-align:right">0.91</td>
+<td style="text-align:right">0.99</td>
+<td style="text-align:right">0.32</td>
+<td style="text-align:right">0.98</td>
+</tr>
+<tr>
+<td>Retain fine-tuning (FT)</td>
+<td style="text-align:right">0.94</td>
+<td style="text-align:right">1.00</td>
+<td style="text-align:right">0.32</td>
+<td style="text-align:right">0.98</td>
+</tr>
+<tr>
+<td>Fisher noise + FT (M6)</td>
+<td style="text-align:right">0.94</td>
+<td style="text-align:right">1.01</td>
+<td style="text-align:right">0.35</td>
+<td style="text-align:right">0.98</td>
+</tr>
+<tr>
+<td>SCRUB-style (M5)</td>
+<td style="text-align:right">0.92</td>
+<td style="text-align:right">0.99</td>
+<td style="text-align:right">0.32</td>
+<td style="text-align:right">0.98</td>
+</tr>
+<tr>
+<td>Contrast-FIM (M8)</td>
+<td style="text-align:right">0.91</td>
+<td style="text-align:right">0.99</td>
+<td style="text-align:right">0.32</td>
+<td style="text-align:right">0.98</td>
+</tr>
+<tr>
+<td>Noisy label (M12)</td>
+<td style="text-align:right">0.87</td>
+<td style="text-align:right">1.01</td>
+<td style="text-align:right">0.38</td>
+<td style="text-align:right">1.12</td>
+</tr>
+<tr>
+<td>Retain label (M13)</td>
+<td style="text-align:right">1.17</td>
+<td style="text-align:right">1.55</td>
+<td style="text-align:right">1.99</td>
+<td style="text-align:right">2.35</td>
+</tr>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right">1.25</td>
+<td style="text-align:right">1.66</td>
+<td style="text-align:right">1.64</td>
+<td style="text-align:right">1.12</td>
+</tr>
+<tr>
+<td>Max loss (M11)</td>
+<td style="text-align:right">1.40</td>
+<td style="text-align:right">1.50</td>
+<td style="text-align:right">10.2</td>
+<td style="text-align:right">18.8</td>
+</tr>
+<tr>
+<td>Anchored gradient ascent (M3)</td>
+<td style="text-align:right">1.65</td>
+<td style="text-align:right">1.41</td>
+<td style="text-align:right">53.4</td>
+<td style="text-align:right">50.9</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.5: forget-set and test MSE relative to the oracle (median; 1 = same as retraining). ETT, block and time-stamp requests.</em></p>
+<figure><a class="zoom" href="../figures/thesis/results/fig3_error_ratios_vs_retrain_ett.png"><img loading="lazy" src="../figures/thesis/results/fig3_error_ratios_vs_retrain_ett.png" alt="Error ratios vs retrain" /></a><figcaption>Thesis Fig 5.7 (log scales). Black diamond at (1,1) = retraining. Blue points have lower forget error than retraining; orange points higher.</figcaption></figure>
+<p><strong>Two groups, and neither reaches (1,1):</strong></p>
+<ul>
+<li><strong>Under-forgetting group</strong> (CP-FIM, FT, M6, M5, M8): stays next to the original. Under high capacity, their forget error is about <strong>3× lower</strong> than the oracle's (0.32 instead of 1).</li>
+<li><strong>Over-forgetting group</strong> (M10, M13, M11, M3): forget error <strong>1.6× to 53×</strong> the oracle's, and test error rises too. This is exactly the behaviour that TS-Unlearn's success criterion (&quot;higher forget error is better&quot;) rewards.</li>
+</ul>
+<hr />
+<h2 id="finding-5-stability-utility-preservation">Finding 5: Stability (utility preservation) <a class="header-anchor" href="#finding-5-stability-utility-preservation">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align:right">Median</th>
+<th style="text-align:right">95%</th>
+<th style="text-align:right">Worst</th>
+<th style="text-align:right">&gt; 10%</th>
+<th style="text-align:right">&gt; 50%</th>
+<th style="text-align:right">&gt; 100%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CP-FIM (M9)</strong></td>
+<td style="text-align:right"><strong>0.999</strong></td>
+<td style="text-align:right"><strong>1.013</strong></td>
+<td style="text-align:right"><strong>1.044</strong></td>
+<td style="text-align:right"><strong>0</strong></td>
+<td style="text-align:right"><strong>0</strong></td>
+<td style="text-align:right"><strong>0</strong></td>
+</tr>
+<tr>
+<td>Retain fine-tuning (FT)</td>
+<td style="text-align:right">0.999</td>
+<td style="text-align:right">1.040</td>
+<td style="text-align:right">1.085</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Fisher noise + FT (M6)</td>
+<td style="text-align:right">1.001</td>
+<td style="text-align:right">1.047</td>
+<td style="text-align:right">1.072</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Contrast-FIM (M8)</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">1.007</td>
+<td style="text-align:right">1.037</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>SCRUB-style (M5)</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">1.013</td>
+<td style="text-align:right">1.104</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Noisy label (M12)</td>
+<td style="text-align:right">1.042</td>
+<td style="text-align:right">1.430</td>
+<td style="text-align:right">1.961</td>
+<td style="text-align:right">99</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right">1.357</td>
+<td style="text-align:right">8.272</td>
+<td style="text-align:right">48.8</td>
+<td style="text-align:right">221</td>
+<td style="text-align:right">145</td>
+<td style="text-align:right">129</td>
+</tr>
+<tr>
+<td>Max loss (M11)</td>
+<td style="text-align:right">1.594</td>
+<td style="text-align:right">93.7</td>
+<td style="text-align:right">536.6</td>
+<td style="text-align:right">210</td>
+<td style="text-align:right">167</td>
+<td style="text-align:right">137</td>
+</tr>
+<tr>
+<td>Anchored gradient ascent (M3)</td>
+<td style="text-align:right">1.634</td>
+<td style="text-align:right">1,518</td>
+<td style="text-align:right"><strong>12,866</strong></td>
+<td style="text-align:right">228</td>
+<td style="text-align:right">162</td>
+<td style="text-align:right">145</td>
+</tr>
+<tr>
+<td>Retain label (M13)</td>
+<td style="text-align:right">2.485</td>
+<td style="text-align:right">8.136</td>
+<td style="text-align:right">34.8</td>
+<td style="text-align:right">308</td>
+<td style="text-align:right">260</td>
+<td style="text-align:right">201</td>
+</tr>
+<tr>
+<td><em>Retraining (M2), for reference</em></td>
+<td style="text-align:right">1.015</td>
+<td style="text-align:right">1.233</td>
+<td style="text-align:right">2.292</td>
+<td style="text-align:right">43</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">2</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.6: test MSE after unlearning ÷ original test MSE, over all 312 paired runs. The last three columns count runs that got more than 10%, 50% and 100% worse.</em></p>
+<figure><a class="zoom" href="../figures/thesis/results/fig9_test_error_safety.png"><img loading="lazy" src="../figures/thesis/results/fig9_test_error_safety.png" alt="Test error safety" /></a><figcaption>Thesis Fig 5.8. Every run of every method (log scale). Black bars = medians. CP-FIM (blue) is the tightest cluster; the shaded area marks runs ≥ 50% worse.</figcaption></figure>
+<figure><a class="zoom" href="../figures/summary/02_stability_damage_counts.png"><img loading="lazy" src="../figures/summary/02_stability_damage_counts.png" alt="Stability counts" /></a></figure>
+<p><strong>Key numbers:</strong></p>
+<ul>
+<li>CP-FIM's test error stayed between <strong>−1.8% and +4.4%</strong> of the original in <strong>all 312 runs</strong> (between −1.8% and +0.8% on ETT). Its 95th percentile is only <strong>+1.3%</strong>. It is the <strong>tightest</strong> method in the experiment.</li>
+<li>The gentle baselines are also stable but <strong>wider</strong> (retain fine-tuning −24% to +8.5%; SCRUB-style up to +10.4%).</li>
+<li>Direct noise: <strong>≥ 50% worse in 145 runs</strong>, <strong>≥ 2× worse in 129</strong>, worst <strong>48.8×</strong>. Gradient ascent reached <strong>12,866×</strong>.</li>
+<li>Retraining itself changes test error a little (median +1.5%) because it trains on less data. &quot;Stability&quot; here means <strong>a method does not damage the model it starts from</strong>.</li>
+</ul>
+<hr />
+<h2 id="-the-main-result-cp-fim-versus-the-direct-noise-method">★ The main result: CP-FIM versus the direct-noise method <a class="header-anchor" href="#-the-main-result-cp-fim-versus-the-direct-noise-method">#</a></h2>
+<p>M10 is our TS-Unlearn-inspired adaptation. It <strong>shares CP-FIM's loop, retain loss, safeguards, optimiser and step count</strong>; only the forget target, noise calibration and Fisher contrast differ.</p>
+<blockquote>
+<p><strong>CP-FIM is closer to the retrained model than the direct-noise method in all 56 settings (310 of 312 paired runs).</strong> Median: direct noise ends <strong>12.2× farther</strong> from retraining (IQR 2.7–46×). It is ≥ 2× farther in <strong>268</strong> runs and ≥ 10× farther in <strong>161</strong> runs.</p>
+</blockquote>
+<figure><a class="zoom" href="../figures/thesis/results/fig8_cpfim_vs_direct_noise.png"><img loading="lazy" src="../figures/thesis/results/fig8_cpfim_vs_direct_noise.png" alt="CP-FIM vs direct noise" /></a><figcaption>Thesis Fig 5.9. Each point is one paired run (log scales). x = CP-FIM's forget-set distance to the oracle, y = direct noise's. Points above the dashed line = CP-FIM closer: 310 of 312.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Regime</th>
+<th>Protocol</th>
+<th style="text-align:right">Settings</th>
+<th style="text-align:right">Runs</th>
+<th style="text-align:right">Ratio</th>
+<th>CP-FIM test</th>
+<th>M10 test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Finance</td>
+<td>Standard</td>
+<td>Crisis</td>
+<td style="text-align:right">16/16</td>
+<td style="text-align:right">47/48</td>
+<td style="text-align:right">30.3</td>
+<td>0.999 (1.009)</td>
+<td>2.15 (9.24)</td>
+</tr>
+<tr>
+<td>Finance</td>
+<td>High-cap.</td>
+<td>Crisis</td>
+<td style="text-align:right">16/16</td>
+<td style="text-align:right">48/48</td>
+<td style="text-align:right">133.2</td>
+<td>1.007 (1.044)</td>
+<td>4.52 (48.8)</td>
+</tr>
+<tr>
+<td>ETT</td>
+<td>Standard</td>
+<td>Random</td>
+<td style="text-align:right">4/4</td>
+<td style="text-align:right">36/36</td>
+<td style="text-align:right">21.4</td>
+<td>1.001 (1.008)</td>
+<td>2.19 (3.80)</td>
+</tr>
+<tr>
+<td>ETT</td>
+<td>Standard</td>
+<td>Block</td>
+<td style="text-align:right">4/4</td>
+<td style="text-align:right">35/36</td>
+<td style="text-align:right">27.4</td>
+<td>1.001 (1.004)</td>
+<td>2.37 (3.99)</td>
+</tr>
+<tr>
+<td>ETT</td>
+<td>Standard</td>
+<td>Time stamp</td>
+<td style="text-align:right">4/4</td>
+<td style="text-align:right">36/36</td>
+<td style="text-align:right">2.8</td>
+<td>1.001 (1.006)</td>
+<td>1.07 (3.79)</td>
+</tr>
+<tr>
+<td>ETT</td>
+<td>High-cap.</td>
+<td>Random</td>
+<td style="text-align:right">4/4</td>
+<td style="text-align:right">36/36</td>
+<td style="text-align:right">22.3</td>
+<td>0.993 (1.004)</td>
+<td>1.61 (4.66)</td>
+</tr>
+<tr>
+<td>ETT</td>
+<td>High-cap.</td>
+<td>Block</td>
+<td style="text-align:right">4/4</td>
+<td style="text-align:right">36/36</td>
+<td style="text-align:right">2.7</td>
+<td>0.993 (0.998)</td>
+<td>1.08 (1.44)</td>
+</tr>
+<tr>
+<td>ETT</td>
+<td>High-cap.</td>
+<td>Time stamp</td>
+<td style="text-align:right">4/4</td>
+<td style="text-align:right">36/36</td>
+<td style="text-align:right">2.2</td>
+<td>0.994 (1.002)</td>
+<td>1.11 (1.40)</td>
+</tr>
+<tr>
+<td><strong>All</strong></td>
+<td></td>
+<td></td>
+<td style="text-align:right"><strong>56/56</strong></td>
+<td style="text-align:right"><strong>310/312</strong></td>
+<td style="text-align:right"><strong>12.2</strong></td>
+<td>0.999 (1.044)</td>
+<td>1.36 (48.8)</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.7. &quot;Ratio&quot; = median of M10's distance to the oracle ÷ CP-FIM's. Test columns = median (worst) test-error ratio vs the original.</em></p>
+<figure><a class="zoom" href="../figures/thesis/results/fig11_ratio_by_dataset.png"><img loading="lazy" src="../figures/thesis/results/fig11_ratio_by_dataset.png" alt="Ratio by dataset" /></a><figcaption>Thesis Fig 5.10. How many times farther the direct-noise method ends up, per dataset and regime. Every bar is above 1. The smallest gap is on ETTm2 (1.4–2.1×). The largest is on finance, up to <strong>1,304×</strong> on SP500 high-capacity, where direct noise is pushed far from sensible prices.</figcaption></figure>
+<h3 id="it-holds-on-all-three-data-splits-table-58">It holds on all three data splits (Table 5.8) <a class="header-anchor" href="#it-holds-on-all-three-data-splits-table-58">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>CP-FIM vs</th>
+<th style="text-align:right">Forget: settings</th>
+<th style="text-align:right">runs</th>
+<th style="text-align:right">Retain: settings</th>
+<th style="text-align:right">runs</th>
+<th style="text-align:right">Test: settings</th>
+<th style="text-align:right">runs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">310</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">307</td>
+<td style="text-align:right">52</td>
+<td style="text-align:right">297</td>
+</tr>
+<tr>
+<td>Anchored ascent (M3)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">293</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">311</td>
+<td style="text-align:right">55</td>
+<td style="text-align:right">309</td>
+</tr>
+<tr>
+<td>Max loss (M11)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">310</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">311</td>
+<td style="text-align:right">54</td>
+<td style="text-align:right">305</td>
+</tr>
+<tr>
+<td>Noisy label (M12)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">302</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">305</td>
+<td style="text-align:right">51</td>
+<td style="text-align:right">289</td>
+</tr>
+<tr>
+<td>Retain label (M13)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">312</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">312</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">312</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="it-survives-the-known-defect">It survives the known defect <a class="header-anchor" href="#it-survives-the-known-defect">#</a></h3>
+<p>The attention-dropout defect affects the <strong>standard-regime ETT</strong> results of both CP-FIM and M10 (<strong>12 of 56</strong> settings). In the <strong>44 unaffected settings</strong> (all finance + all high-capacity ETT), CP-FIM is closer in <strong>44/44</strong> settings and <strong>203/204</strong> runs. In the 12 affected settings it is closer in 12/12 (107/108 runs).</p>
+<h3 id="why-the-difference-a-plausible-explanation">Why the difference (a plausible explanation) <a class="header-anchor" href="#why-the-difference-a-plausible-explanation">#</a></h3>
+<ul>
+<li><strong>Direct-noise target</strong> = zero-mean noise with the spread of the forecasts. It asks the model to forecast something <strong>unrelated</strong> to the data on the forget windows. Those windows share nearly all their structure with retained and future windows, so the damage <strong>spreads</strong>: forget error becomes <strong>2.4×</strong> the oracle's on ETT and <strong>57×</strong> on finance (medians), and test error rises.</li>
+<li><strong>CP-FIM target</strong> = the teacher's forecast + noise calibrated to retain residuals. <strong>In expectation it favours the teacher's output</strong>, so prediction changes stay small.</li>
+<li><strong>For these forecasting tasks the oracle is itself close to the original</strong> (Table 5.3). Staying close is a much better strategy than jumping away.</li>
+</ul>
+<p>The ablations support target anchoring: replacing CP-FIM's target with pure noise moves the model about <strong>3.7 gaps</strong> away on ETT. This does not isolate <em>every</em> difference between M9 and M10.</p>
+<hr />
+<h2 id="finding-6-how-cp-fim-compares-with-every-method">Finding 6: How CP-FIM compares with every method <a class="header-anchor" href="#finding-6-how-cp-fim-compares-with-every-method">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Compared with</th>
+<th style="text-align:right">Settings (of 56)</th>
+<th style="text-align:right">Runs (of 312)</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right"><strong>56</strong></td>
+<td style="text-align:right">310</td>
+<td>CP-FIM avoids its destructive behaviour</td>
+</tr>
+<tr>
+<td>Max loss (M11)</td>
+<td style="text-align:right"><strong>56</strong></td>
+<td style="text-align:right">310</td>
+<td>same</td>
+</tr>
+<tr>
+<td>Anchored gradient ascent (M3)</td>
+<td style="text-align:right"><strong>56</strong></td>
+<td style="text-align:right">293</td>
+<td>same</td>
+</tr>
+<tr>
+<td>Noisy label (M12)</td>
+<td style="text-align:right"><strong>56</strong></td>
+<td style="text-align:right">302</td>
+<td>same</td>
+</tr>
+<tr>
+<td>Retain label (M13)</td>
+<td style="text-align:right"><strong>56</strong></td>
+<td style="text-align:right">312</td>
+<td>same</td>
+</tr>
+<tr>
+<td>No unlearning (M1)</td>
+<td style="text-align:right">22</td>
+<td style="text-align:right">111</td>
+<td>CP-FIM is usually <strong>not</strong> closer than doing nothing</td>
+</tr>
+<tr>
+<td>Contrast-FIM (M8)</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">99</td>
+<td>the new version is not clearly better</td>
+</tr>
+<tr>
+<td>SCRUB-style (M5)</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">90</td>
+<td>SCRUB-style is usually closer</td>
+</tr>
+<tr>
+<td>Retain fine-tuning (FT)</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">84</td>
+<td>simple fine-tuning is usually closer</td>
+</tr>
+<tr>
+<td>Fisher noise + FT (M6)</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">103</td>
+<td>Fisher noise + FT is usually closer</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.9.</em></p>
+<figure><a class="zoom" href="../figures/summary/01_cpfim_wins_by_method.png"><img loading="lazy" src="../figures/summary/01_cpfim_wins_by_method.png" alt="Wins by method" /></a></figure>
+<figure><a class="zoom" href="../figures/thesis/results/fig10_tradeoff_map.png"><img loading="lazy" src="../figures/thesis/results/fig10_tradeoff_map.png" alt="Trade-off map" /></a><figcaption>Thesis Fig 5.11. Medians over all 312 runs. x = distance to the oracle relative to the original model; y = test MSE relative to the original. CP-FIM and the other gentle methods overlap at the original (1, 1). The overshooting methods move <strong>12–28× farther</strong> from retraining and damage accuracy. A second retrained model (the target) sits at <strong>0.41</strong> on the x-axis. Nobody reaches it.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align:right">Mean rank</th>
+<th style="text-align:right">Closest in (settings)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fisher noise + FT (M6)</td>
+<td style="text-align:right">2.59</td>
+<td style="text-align:right">27</td>
+</tr>
+<tr>
+<td>Retain fine-tuning (FT)</td>
+<td style="text-align:right">2.91</td>
+<td style="text-align:right">13</td>
+</tr>
+<tr>
+<td>SCRUB-style (M5)</td>
+<td style="text-align:right">3.20</td>
+<td style="text-align:right">7</td>
+</tr>
+<tr>
+<td>Contrast-FIM (M8)</td>
+<td style="text-align:right">3.75</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td>No unlearning (M1)</td>
+<td style="text-align:right">4.29</td>
+<td style="text-align:right">–</td>
+</tr>
+<tr>
+<td><strong>CP-FIM (M9)</strong></td>
+<td style="text-align:right"><strong>4.43</strong></td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td>Noisy label (M12)</td>
+<td style="text-align:right">7.04</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Max loss (M11)</td>
+<td style="text-align:right">8.77</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right">9.62</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Anchored gradient ascent (M3)</td>
+<td style="text-align:right">9.68</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Retain label (M13)</td>
+<td style="text-align:right">9.73</td>
+<td style="text-align:right">0</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.10: mean rank by closeness to the oracle (1 = closest) over 56 settings.</em></p>
+<figure><a class="zoom" href="../figures/summary/03_mean_rank_closeness.png"><img loading="lazy" src="../figures/summary/03_mean_rank_closeness.png" alt="Mean rank" /></a></figure>
+<p><strong>Takeaway:</strong> two clear groups. Against the 5 aggressive methods, CP-FIM wins <strong>every</strong> setting. Against the gentle methods it usually loses by a <strong>small</strong> margin: its distance to the oracle is <strong>0.92–1.13×</strong> the original model's, while FT and M6 move slightly closer.</p>
+<hr />
+<h2 id="finding-7-how-much-of-the-gap-to-retraining-does-each-method-close">Finding 7: How much of the gap to retraining does each method close? <a class="header-anchor" href="#finding-7-how-much-of-the-gap-to-retraining-does-each-method-close">#</a></h2>
+<p>Uses the <strong>43 settings where deletion has a clear effect (DSR ≥ 1.5)</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align:right">RNC standard</th>
+<th style="text-align:right">RNC high-cap.</th>
+<th style="text-align:right">Speed-up standard</th>
+<th style="text-align:right">Speed-up high-cap.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CP-FIM (M9)</td>
+<td style="text-align:right">−0.05</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">0.9×</td>
+<td style="text-align:right">12.6×</td>
+</tr>
+<tr>
+<td>Retain fine-tuning (FT)</td>
+<td style="text-align:right">0.24</td>
+<td style="text-align:right">0.04</td>
+<td style="text-align:right">7.9×</td>
+<td style="text-align:right">80.9×</td>
+</tr>
+<tr>
+<td>Fisher noise + FT (M6)</td>
+<td style="text-align:right">0.25</td>
+<td style="text-align:right">0.16</td>
+<td style="text-align:right">1.2×</td>
+<td style="text-align:right">13.1×</td>
+</tr>
+<tr>
+<td>SCRUB-style (M5)</td>
+<td style="text-align:right">0.04</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">4.1×</td>
+<td style="text-align:right">46.2×</td>
+</tr>
+<tr>
+<td>Contrast-FIM (M8)</td>
+<td style="text-align:right">0.02</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">1.1×</td>
+<td style="text-align:right">14.0×</td>
+</tr>
+<tr>
+<td>Noisy label (M12)</td>
+<td style="text-align:right">−1.4</td>
+<td style="text-align:right">−0.2</td>
+<td style="text-align:right">16.2×</td>
+<td style="text-align:right">139.6×</td>
+</tr>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right"><strong>−11.0</strong></td>
+<td style="text-align:right">−2.7</td>
+<td style="text-align:right">2.6×</td>
+<td style="text-align:right">34.1×</td>
+</tr>
+<tr>
+<td>Gradient ascent (M3)</td>
+<td style="text-align:right">−5.3</td>
+<td style="text-align:right"><strong>−14.9</strong></td>
+<td style="text-align:right">5.6×</td>
+<td style="text-align:right">48.1×</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Table 5.11: median RNC and speed-up over retraining, ETT.</em></p>
+<figure><a class="zoom" href="../figures/summary/05_rnc_gap_closed.png"><img loading="lazy" src="../figures/summary/05_rnc_gap_closed.png" alt="RNC" /></a></figure>
+<figure><a class="zoom" href="../figures/summary/04_speedup_vs_retraining.png"><img loading="lazy" src="../figures/summary/04_speedup_vs_retraining.png" alt="Speed-up" /></a></figure>
+<ul>
+<li>The best methods close only <strong>about a quarter</strong> of the gap (standard) and much less under high capacity.</li>
+<li>CP-FIM closes almost <strong>none</strong> of it, but it never moves <strong>away</strong> (direct noise moves <strong>11 gaps away</strong> under standard training).</li>
+<li><strong>Cost:</strong> CP-FIM is <strong>not</strong> cheaper than retraining on standard ETT (<strong>0.9×</strong>), because the per-example Fisher step takes about as long as early-stopped retraining. On high-capacity ETT it is <strong>12.6× faster</strong>.</li>
+<li><strong>Retraining is cheap here:</strong> median ≈ <strong>30 s</strong> (standard) and <strong>5.4 min</strong> (high-capacity) for ETT; <strong>27 s</strong> and <strong>1.8 min</strong> for finance.</li>
+</ul>
+<hr />
+<h2 id="finding-8-which-parts-of-cp-fim-matter">Finding 8: Which parts of CP-FIM matter? <a class="header-anchor" href="#finding-8-which-parts-of-cp-fim-matter">#</a></h2>
+<figure><a class="zoom" href="../figures/thesis/results/fig4_cpfim_ablations.png"><img loading="lazy" src="../figures/thesis/results/fig4_cpfim_ablations.png" alt="Ablations" /></a><figcaption>Thesis Fig 5.13. Change in distance to retraining vs full CP-FIM, as a fraction of the original-to-oracle gap (settings with DSR ≥ 1.5). &lt; 0 = closer. Whiskers = 95% cluster-bootstrap intervals. Everything sits within about ±0.02 of zero.</figcaption></figure>
+<ul>
+<li>Most of the <strong>eleven tested component changes</strong> (removing or shuffling the Fisher contrast, per-tensor or legacy normalisation, fixed α = 0.5, unconstrained α, warm-up only, κ = 0.5 or 2, SGD, supervised retain) change the result by <strong>no more than about 2% of the gap</strong>.</li>
+<li><strong>The big changes come from replacing the forget target:</strong> pure-noise target → about <strong>3.7 gaps</strong> away; gradient-ascent target → about <strong>583 gaps</strong> away (ETT). These two are off the scale of this plot.</li>
+<li><strong>Interpretation:</strong> the <strong>teacher-anchored target</strong> is associated with stability. The Fisher contrast and Pareto weighting have <strong>small measured effects</strong>. This matches Foster et al.'s SSD warning (importance overlaps when the forget set resembles the rest of the data) and Kunstner et al.'s limits of the empirical Fisher.</li>
+</ul>
+<hr />
+<h2 id="the-measures-can-disagree-table-520">The measures can disagree (Table 5.20) <a class="header-anchor" href="#the-measures-can-disagree-table-520">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>DSR</th>
+<th>Loss-attack AUC (original)</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard</td>
+<td>1.7–1.8 (clear effect)</td>
+<td>0.49–0.53 (no signal)</td>
+<td>the attack <strong>cannot see</strong> an effect that prediction agreement can</td>
+</tr>
+<tr>
+<td>High-capacity</td>
+<td>2.4–2.8 (clear effect)</td>
+<td>0.97–0.98 (strong signal)</td>
+<td>both measures see it</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Also:</strong> a larger forget error is <strong>not</strong> better unlearning. The methods with the largest forget errors (Table 5.5) are the ones <strong>farthest from the oracle</strong> (Table 5.9) and the ones that <strong>damage accuracy most</strong> (Table 5.6).</p>
+<h2 id="comparison-with-ts-unlearns-own-numbers-table-518">Comparison with TS-Unlearn's own numbers (Table 5.18) <a class="header-anchor" href="#comparison-with-ts-unlearns-own-numbers-table-518">#</a></h2>
+<figure><a class="zoom" href="../figures/summary/07_tsunlearn_overforgetting.png"><img loading="lazy" src="../figures/summary/07_tsunlearn_overforgetting.png" alt="TS-Unlearn over-forgetting" /></a></figure>
+<p>TS-Unlearn reports forget errors <strong>1.4× to 7.3×</strong> larger than <strong>its own</strong> retrained model's. Under the &quot;match retraining&quot; definition, that is <strong>over-forgetting</strong>. Our results show it can be detected (Table 5.4) and that it goes with worse test error (Table 5.6). Our direct-noise adaptation shows the same pattern (2.4× on ETT). TS-Unlearn also uses only random deletion (10–40%), which in our experiment removes very little unique information.</p>
+<h2 id="unified-comparison-of-all-methods-table-519">Unified comparison of all methods (Table 5.19) <a class="header-anchor" href="#unified-comparison-of-all-methods-table-519">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th style="text-align:right">CP-FIM closer (of 56)</th>
+<th style="text-align:right">Mean rank</th>
+<th style="text-align:right">Test ratio</th>
+<th style="text-align:right">≥ 50% worse</th>
+<th style="text-align:right">Speed-up</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CP-FIM (M9)</strong></td>
+<td style="text-align:right">–</td>
+<td style="text-align:right">4.43</td>
+<td style="text-align:right">0.999</td>
+<td style="text-align:right"><strong>0</strong></td>
+<td style="text-align:right">3.7×</td>
+<td><strong>stable, conservative</strong></td>
+</tr>
+<tr>
+<td>Fisher noise + FT (M6)</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">2.59</td>
+<td style="text-align:right">1.001</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">4.8×</td>
+<td>stable, closest</td>
+</tr>
+<tr>
+<td>Retain fine-tuning (FT)</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">2.91</td>
+<td style="text-align:right">0.999</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">28.8×</td>
+<td>stable, cheap</td>
+</tr>
+<tr>
+<td>SCRUB-style (M5)</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">3.20</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">21.8×</td>
+<td>stable</td>
+</tr>
+<tr>
+<td>Contrast-FIM (M8)</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">3.75</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">4.2×</td>
+<td>stable</td>
+</tr>
+<tr>
+<td>No unlearning (M1)</td>
+<td style="text-align:right">22</td>
+<td style="text-align:right">4.29</td>
+<td style="text-align:right">1.000</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">–</td>
+<td>lower reference</td>
+</tr>
+<tr>
+<td>Noisy label (M12)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">7.04</td>
+<td style="text-align:right">1.042</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">48.0×</td>
+<td>over-forgets</td>
+</tr>
+<tr>
+<td>Max loss (M11)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">8.77</td>
+<td style="text-align:right">1.594</td>
+<td style="text-align:right">167</td>
+<td style="text-align:right">25.2×</td>
+<td>destructive</td>
+</tr>
+<tr>
+<td>Direct-noise (M10)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">9.62</td>
+<td style="text-align:right">1.357</td>
+<td style="text-align:right">145</td>
+<td style="text-align:right">13.3×</td>
+<td>destructive</td>
+</tr>
+<tr>
+<td>Grad. ascent (M3)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">9.68</td>
+<td style="text-align:right">1.634</td>
+<td style="text-align:right">162</td>
+<td style="text-align:right">14.9×</td>
+<td>destructive</td>
+</tr>
+<tr>
+<td>Retain label (M13)</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">9.73</td>
+<td style="text-align:right">2.485</td>
+<td style="text-align:right">260</td>
+<td style="text-align:right">48.1×</td>
+<td>destructive</td>
+</tr>
+</tbody>
+</table></div>
+
+  <nav class="prevnext" aria-label="Chapter navigation"><a class="pn prev" href="../docs/07_evaluation_metrics.html"><span>Previous</span>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a><a class="pn next" href="../docs/09_fixes_statistics_robustness.html"><span>Next</span>9. Issues found and fixed, statistics and robustness</a></nav>
+  </main>
+  <footer class="foot">
+    <p>Study aid for the B.Sc. thesis at Brac University, October 2026. The thesis PDF is the authoritative source; every number here is copied from it.</p>
+  </footer>
+</div>
+</div>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p><button type="button" class="close">Close</button></dialog>
+<script type="module" src="../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data and deletion requests | CP-FIM thesis study guide</title>
+<meta name="description" content="Illustrated study guide for the BRAC University thesis on selective unlearning for temporal regression (CP-FIM).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%272%27 y=%274%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3Crect x=%277%27 y=%2712%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%232a78d6%27/%3E%3Crect x=%2712%27 y=%2720%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+options:{ignoreHtmlClass:'mermaid'},chtml:{scale:0.98}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="side" id="side">
+  <a class="brand" href="../index.html">CP-FIM thesis<br><span>study guide</span></a>
+  <nav aria-label="Chapters"><a class="side-home" href="../index.html">Overview</a><ol><li><a href="../docs/01_big_picture.html"><span class="n">1</span>The big picture</a></li><li><a href="../docs/02_background_and_literature.html"><span class="n">2</span>Background and literature</a></li><li><a href="../docs/03_data_and_deletion.html" class="active" aria-current="page"><span class="n">3</span>Data and deletion requests</a></li><li><a href="../docs/04_models_and_training.html"><span class="n">4</span>Forecasting models, training regimes and the experiment grid</a></li><li><a href="../docs/05_cpfim_method.html"><span class="n">5</span>CP-FIM: the proposed method</a></li><li><a href="../docs/06_comparison_methods.html"><span class="n">6</span>Comparison methods, design alternatives and ablations</a></li><li><a href="../docs/07_evaluation_metrics.html"><span class="n">7</span>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></li><li><a href="../docs/08_results.html"><span class="n">8</span>Results</a></li><li><a href="../docs/09_fixes_statistics_robustness.html"><span class="n">9</span>Issues found and fixed, statistics and robustness</a></li><li><a href="../docs/10_conclusion_and_impact.html"><span class="n">10</span>Conclusion, contributions, limitations, future work and impact</a></li><li><a href="../docs/11_cheat_sheet.html"><span class="n">11</span>Cheat sheet: every key number, formula and term on one page</a></li><li><a href="../docs/12_viva_questions.html"><span class="n">12</span>Viva / defence Q&amp;A</a></li><li><a href="../docs/13_figure_atlas.html"><span class="n">13</span>Figure atlas: every figure in this repository</a></li></ol></nav>
+  <div class="side-foot">
+    <button type="button" class="theme" id="theme" aria-pressed="false">Dark mode</button>
+    <a href="https://github.com/Tariq-15/temp111">Source on GitHub</a>
+  </div>
+</aside>
+<div class="main-wrap">
+  <div class="topbar">
+    <button type="button" class="menu" id="menu" aria-controls="side" aria-expanded="false">Chapters</button>
+    <a class="top-brand" href="../index.html">CP-FIM thesis study guide</a>
+  </div>
+  <main id="main" class="content">
+  <div class="strip"><svg class="windows" viewBox="-2 -2 656 123" role="navigation" aria-label="Chapters, drawn as overlapping sliding windows"><line class="axis" x1="0" y1="105" x2="652" y2="105"/><line class="tick" x1="0" y1="102" x2="0" y2="108"/><line class="tick" x1="22" y1="102" x2="22" y2="108"/><line class="tick" x1="44" y1="102" x2="44" y2="108"/><line class="tick" x1="66" y1="102" x2="66" y2="108"/><line class="tick" x1="88" y1="102" x2="88" y2="108"/><line class="tick" x1="110" y1="102" x2="110" y2="108"/><line class="tick" x1="132" y1="102" x2="132" y2="108"/><line class="tick" x1="154" y1="102" x2="154" y2="108"/><line class="tick" x1="176" y1="102" x2="176" y2="108"/><line class="tick" x1="198" y1="102" x2="198" y2="108"/><line class="tick" x1="220" y1="102" x2="220" y2="108"/><line class="tick" x1="242" y1="102" x2="242" y2="108"/><line class="tick" x1="264" y1="102" x2="264" y2="108"/><line class="tick" x1="286" y1="102" x2="286" y2="108"/><line class="tick" x1="308" y1="102" x2="308" y2="108"/><line class="tick" x1="330" y1="102" x2="330" y2="108"/><line class="tick" x1="352" y1="102" x2="352" y2="108"/><line class="tick" x1="374" y1="102" x2="374" y2="108"/><line class="tick" x1="396" y1="102" x2="396" y2="108"/><line class="tick" x1="418" y1="102" x2="418" y2="108"/><line class="tick" x1="440" y1="102" x2="440" y2="108"/><line class="tick" x1="462" y1="102" x2="462" y2="108"/><line class="tick" x1="484" y1="102" x2="484" y2="108"/><line class="tick" x1="506" y1="102" x2="506" y2="108"/><line class="tick" x1="528" y1="102" x2="528" y2="108"/><line class="tick" x1="550" y1="102" x2="550" y2="108"/><line class="tick" x1="572" y1="102" x2="572" y2="108"/><line class="tick" x1="594" y1="102" x2="594" y2="108"/><line class="tick" x1="616" y1="102" x2="616" y2="108"/><line class="tick" x1="638" y1="102" x2="638" y2="108"/><a href="01_big_picture.html" class="win done" aria-label="Chapter 1: The big picture"><title>1. The big picture</title><rect x="0" y="0" width="124" height="26" rx="6"/><text x="12" y="17.5">1<tspan class="lbl" dx="8">Big picture</tspan></text></a><a href="02_background_and_literature.html" class="win done" aria-label="Chapter 2: Background and literature"><title>2. Background and literature</title><rect x="44" y="33" width="124" height="26" rx="6"/><text x="56" y="50.5">2<tspan class="lbl" dx="8">Literature</tspan></text></a><a href="03_data_and_deletion.html" class="win current" aria-label="Chapter 3: Data and deletion requests" aria-current="page"><title>3. Data and deletion requests</title><rect x="88" y="66" width="124" height="26" rx="6"/><text x="100" y="83.5">3<tspan class="lbl" dx="8">Data</tspan></text></a><a href="04_models_and_training.html" class="win " aria-label="Chapter 4: Forecasting models, training regimes and the experiment grid"><title>4. Forecasting models, training regimes and the experiment grid</title><rect x="132" y="0" width="124" height="26" rx="6"/><text x="144" y="17.5">4<tspan class="lbl" dx="8">Models</tspan></text></a><a href="05_cpfim_method.html" class="win " aria-label="Chapter 5: CP-FIM: the proposed method"><title>5. CP-FIM: the proposed method</title><rect x="176" y="33" width="124" height="26" rx="6"/><text x="188" y="50.5">5<tspan class="lbl" dx="8">CP-FIM</tspan></text></a><a href="06_comparison_methods.html" class="win " aria-label="Chapter 6: Comparison methods, design alternatives and ablations"><title>6. Comparison methods, design alternatives and ablations</title><rect x="220" y="66" width="124" height="26" rx="6"/><text x="232" y="83.5">6<tspan class="lbl" dx="8">Methods</tspan></text></a><a href="07_evaluation_metrics.html" class="win " aria-label="Chapter 7: Evaluation metrics: how &quot;unlearning worked?&quot; is measured"><title>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</title><rect x="264" y="0" width="124" height="26" rx="6"/><text x="276" y="17.5">7<tspan class="lbl" dx="8">Metrics</tspan></text></a><a href="08_results.html" class="win " aria-label="Chapter 8: Results"><title>8. Results</title><rect x="308" y="33" width="124" height="26" rx="6"/><text x="320" y="50.5">8<tspan class="lbl" dx="8">Results</tspan></text></a><a href="09_fixes_statistics_robustness.html" class="win " aria-label="Chapter 9: Issues found and fixed, statistics and robustness"><title>9. Issues found and fixed, statistics and robustness</title><rect x="352" y="66" width="124" height="26" rx="6"/><text x="364" y="83.5">9<tspan class="lbl" dx="8">Fixes, stats</tspan></text></a><a href="10_conclusion_and_impact.html" class="win " aria-label="Chapter 10: Conclusion, contributions, limitations, future work and impact"><title>10. Conclusion, contributions, limitations, future work and impact</title><rect x="396" y="0" width="124" height="26" rx="6"/><text x="408" y="17.5">10<tspan class="lbl" dx="8">Conclusion</tspan></text></a><a href="11_cheat_sheet.html" class="win " aria-label="Chapter 11: Cheat sheet: every key number, formula and term on one page"><title>11. Cheat sheet: every key number, formula and term on one page</title><rect x="440" y="33" width="124" height="26" rx="6"/><text x="452" y="50.5">11<tspan class="lbl" dx="8">Cheat sheet</tspan></text></a><a href="12_viva_questions.html" class="win " aria-label="Chapter 12: Viva / defence Q&amp;A"><title>12. Viva / defence Q&amp;A</title><rect x="484" y="66" width="124" height="26" rx="6"/><text x="496" y="83.5">12<tspan class="lbl" dx="8">Viva Q&amp;A</tspan></text></a><a href="13_figure_atlas.html" class="win " aria-label="Chapter 13: Figure atlas: every figure in this repository"><title>13. Figure atlas: every figure in this repository</title><rect x="528" y="0" width="124" height="26" rx="6"/><text x="540" y="17.5">13<tspan class="lbl" dx="8">Figures</tspan></text></a></svg></div><header class="chapter-head"><p class="chapter-num">Chapter 3 of 13</p><h1>Data and deletion requests</h1><p class="chapter-sub">Thesis Section 4.4 (Data and Target (Forget) Set Creation)</p></header>
+  <h2 id="31-the-eight-datasets-table-411">3.1 The eight datasets (Table 4.11) <a class="header-anchor" href="#31-the-eight-datasets-table-411">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Content</th>
+<th>Frequency</th>
+<th>Period / splits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SP500</strong></td>
+<td>S&amp;P 500 index (^GSPC)</td>
+<td>Daily</td>
+<td>2010–2024; train &lt; 2023, validation 2023, test 2024</td>
+</tr>
+<tr>
+<td><strong>NASDAQ</strong></td>
+<td>NASDAQ Composite (^IXIC)</td>
+<td>Daily</td>
+<td>same as SP500</td>
+</tr>
+<tr>
+<td><strong>MultiStock</strong></td>
+<td>20 large US stocks: AAPL, MSFT, GOOGL, AMZN, META, TSLA, NVDA, JPM, JNJ, V, WMT, PG, XOM, BAC, MA, HD, CVX, ABBV, PFE, COST</td>
+<td>Daily</td>
+<td>same as SP500</td>
+</tr>
+<tr>
+<td><strong>MixedAssets</strong></td>
+<td>Gold (GC=F), crude oil (CL=F), US 10-year yield (^TNX), EUR/USD</td>
+<td>Daily</td>
+<td>same as SP500</td>
+</tr>
+<tr>
+<td><strong>ETTh1, ETTh2</strong></td>
+<td>Electricity transformer: oil temperature + 6 load features = <strong>7 channels</strong></td>
+<td>Hourly</td>
+<td>12 / 4 / 4 months (train / val / test)</td>
+</tr>
+<tr>
+<td><strong>ETTm1, ETTm2</strong></td>
+<td>Same as above</td>
+<td>15 minutes</td>
+<td>12 / 4 / 4 months</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>The two families have different jobs:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Financial</th>
+<th>ETT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Role</td>
+<td>Crisis-period deletion on daily market series</td>
+<td>Controlled comparison of random vs block vs time-stamp deletion on a standard benchmark</td>
+</tr>
+<tr>
+<td>Inputs</td>
+<td>5 features per asset: close, volume, daily return, 5-day MA, 10-day MA</td>
+<td>7 channels</td>
+</tr>
+<tr>
+<td>Window</td>
+<td><strong>30 trading days → next-day closing price</strong> (a price <em>level</em>)</td>
+<td><strong>96 steps → next 96 steps</strong>, all 7 channels</td>
+</tr>
+<tr>
+<td>Stride</td>
+<td>1 day</td>
+<td><strong>4 steps</strong> (heavy overlap)</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>LSTM, GRU, BiLSTM, CNN-LSTM</td>
+<td>PatchTST</td>
+</tr>
+<tr>
+<td>Trust level</td>
+<td>⚠️ the price-level models <strong>lose to persistence</strong>, so the results are descriptive only</td>
+<td>✅ <strong>main evidence</strong>: the models beat persistence</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a class="zoom" href="../figures/flowcharts/04_financial_data_preparation.png"><img loading="lazy" src="../figures/flowcharts/04_financial_data_preparation.png" alt="Financial data preparation" /></a></figure><figure><a class="zoom" href="../figures/flowcharts/05_ett_data_preparation.png"><img loading="lazy" src="../figures/flowcharts/05_ett_data_preparation.png" alt="ETT data preparation" /></a></figure>
+<h2 id="32-pre-processing-and-leakage-control">3.2 Pre-processing and leakage control <a class="header-anchor" href="#32-pre-processing-and-leakage-control">#</a></h2>
+<p><strong>Leakage</strong> = future or evaluation data influencing training. Four controls prevent it:</p>
+<ol>
+<li><strong>Public scaling prefix.</strong> The scaler is fitted only on a short prefix at the start (the first <strong>126 trading days</strong> for finance, the first <strong>7 days</strong> for ETT). The prefix is never trained on and is outside the deletion scope, so scaling cannot leak and does not depend on the deleted data.</li>
+<li><strong>Calendar splits.</strong> Train → validation → test strictly in time order.</li>
+<li><strong>Purged boundaries.</strong> Any window whose input or target crosses a split boundary is removed.</li>
+<li><strong>Attack hold-out.</strong> About 5% of each tenth of the training era is held out as <strong>non-member</strong> blocks for the membership test. They come from the same period but are never trained on.</li>
+</ol>
+<figure><a class="zoom" href="../figures/tikz/leakage_control_timeline.png"><img loading="lazy" src="../figures/tikz/leakage_control_timeline.png" alt="Leakage control timeline" /></a><figcaption>Thesis Fig 4.7 (not to scale). Grey = public prefix, blue = training era, red stripes = held-out attack blocks, white gaps = purged boundaries.</figcaption></figure>
+<figure><a class="zoom" href="../figures/flowcharts/06_temporal_leakage_controls.png"><img loading="lazy" src="../figures/flowcharts/06_temporal_leakage_controls.png" alt="Temporal leakage controls flowchart" /></a></figure>
+<h2 id="33-two-kinds-of-deletion-request">3.3 Two kinds of deletion request <a class="header-anchor" href="#33-two-kinds-of-deletion-request">#</a></h2>
+<div class="diagram"><pre class="mermaid">flowchart TD
+    R{&quot;Deletion request type&quot;} --&gt;|&quot;Window request&lt;br/&gt;(names examples)&quot;| W[&quot;D_f = the named windows&quot;]
+    R --&gt;|&quot;Time-stamp request&lt;br/&gt;(names raw time steps S)&quot;| C[&quot;Dependency closure:&lt;br/&gt;D_f(S) = { k : span(k) ∩ S ≠ ∅ }&quot;]
+    W --&gt; OUT[&quot;Retain set D_r = D \ D_f&quot;]
+    C --&gt; OUT
+</pre></div>
+<figure><a class="zoom" href="../figures/flowcharts/08_deletion_request_routing.png"><img loading="lazy" src="../figures/flowcharts/08_deletion_request_routing.png" alt="Deletion request routing" /></a></figure>
+<p>The <strong>span</strong> of example <span class="math">\(k\)</span> (starting at time <span class="math">\(t_k\)</span>, with feature history <span class="math">\(h\)</span>):</p>
+<div class="math-block">\[\mathrm{span}(k) = \{\, t_k - h, \dots, t_k + L + H - 1 \,\}\]</div>
+<p>A time-stamp request <span class="math">\(S\)</span> deletes every example whose span touches <span class="math">\(S\)</span>:</p>
+<div class="math-block">\[D_f(S) = \{\, k : \mathrm{span}(k) \cap S \neq \emptyset \,\}, \qquad D_r = D \setminus D_f(S)\]</div>
+<h3 id="dependency-closure-algorithm-thesis-algorithm-2">Dependency closure algorithm (thesis Algorithm 2) <a class="header-anchor" href="#dependency-closure-algorithm-thesis-algorithm-2">#</a></h3>
+<pre><code class="language-text">Input:  window starts t_1..t_N, look-back L, horizon H, feature history h, deleted steps S
+Output: forget set D_f, retain set D_r
+
+D_f ← ∅
+for k = 1..N:
+    span(k) ← {t_k − h, …, t_k + L + H − 1}
+    if span(k) ∩ S ≠ ∅:
+        D_f ← D_f ∪ {k}          # the window uses a deleted observation
+D_r ← {1..N} \ D_f
+return D_f, D_r
+</code></pre>
+<figure><a class="zoom" href="../figures/thesis/methodology/13_dependency_closure_decision_icons.png"><img loading="lazy" src="../figures/thesis/methodology/13_dependency_closure_decision_icons.png" alt="Per-window dependency closure decision" /></a><figcaption>Thesis Fig 4.9. The per-window decision. After closure, no retained window contains any deleted observation in its input, its target or its derived-feature history.</figcaption></figure>
+<h2 id="34-financial-request-five-crisis-periods-table-412">3.4 Financial request: five crisis periods (Table 4.12) <a class="header-anchor" href="#34-financial-request-five-crisis-periods-table-412">#</a></h2>
+<p>Every training window touching one of these periods is removed. A window uses 30 input days, and the 10-day moving average needs <strong>9 extra days of history (<span class="math">\(h = 9\)</span>)</strong>, so a crisis also removes the windows just before and after it. This is a <strong>time-stamp request with dependency closure</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Event</th>
+<th>Start</th>
+<th>End</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>US debt downgrade and European debt stress</td>
+<td>2011-07-01</td>
+<td>2011-09-30</td>
+</tr>
+<tr>
+<td>2</td>
+<td>China market turbulence and oil price crash</td>
+<td>2015-08-01</td>
+<td>2016-02-29</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Late-2018 market sell-off</td>
+<td>2018-10-01</td>
+<td>2018-12-31</td>
+</tr>
+<tr>
+<td>4</td>
+<td>COVID-19 crash</td>
+<td>2020-02-20</td>
+<td>2020-04-30</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2022 inflation shock and bear market</td>
+<td>2022-01-01</td>
+<td>2022-10-31</td>
+</tr>
+</tbody>
+</table></div>
+<div class="diagram"><pre class="mermaid">gantt
+    title Financial deletion request: the five crisis periods (training era 2010–2022)
+    dateFormat  YYYY-MM-DD
+    axisFormat  %Y
+    section Crises
+    US debt downgrade        :crit, 2011-07-01, 2011-09-30
+    China + oil crash        :crit, 2015-08-01, 2016-02-29
+    Late-2018 sell-off       :crit, 2018-10-01, 2018-12-31
+    COVID-19 crash           :crit, 2020-02-20, 2020-04-30
+    2022 bear market         :crit, 2022-01-01, 2022-10-31
+    section Splits
+    Validation               :active, 2023-01-01, 2023-12-31
+    Test                     :2024-01-01, 2024-12-31
+</pre></div>
+<figure><a class="zoom" href="../figures/flowcharts/09_financial_crisis_request.png"><img loading="lazy" src="../figures/flowcharts/09_financial_crisis_request.png" alt="Financial crisis request" /></a></figure>
+<h2 id="35-ett-three-deletion-protocols">3.5 ETT: three deletion protocols <a class="header-anchor" href="#35-ett-three-deletion-protocols">#</a></h2>
+<p>Each protocol is repeated with <strong>three random requests (seeds 101, 202, 303)</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>What is removed</th>
+<th>Windows removed</th>
+<th>Why it exists</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Random windows</strong></td>
+<td>20% of training windows chosen at random</td>
+<td>20%</td>
+<td>This is <strong>TS-Unlearn's protocol</strong></td>
+</tr>
+<tr>
+<td><strong>Block windows</strong></td>
+<td>the same 20% of windows, as <strong>6 contiguous blocks</strong></td>
+<td>20%</td>
+<td>Same <em>amount</em> as random, different <em>shape</em></td>
+</tr>
+<tr>
+<td><strong>Time stamps</strong></td>
+<td>20% of <strong>raw time steps</strong> in 6 blocks + <strong>every window</strong> using them (<span class="math">\(h = 0\)</span>)</td>
+<td><strong>24–35%</strong></td>
+<td>&quot;True&quot; deletion of observations</td>
+</tr>
+</tbody>
+</table></div>
+<figure><a class="zoom" href="../figures/thesis/results/ett_deletion_protocols.png"><img loading="lazy" src="../figures/thesis/results/ett_deletion_protocols.png" alt="Three ETT deletion protocols" /></a><figcaption>Thesis Fig 4.8 (illustration). Random deletion leaves kept neighbours beside every deleted window. Block deletion removes contiguous runs. Time-stamp deletion also removes every window overlapping the deleted steps, so it removes more windows.</figcaption></figure>
+<p><strong>Key reasoning:</strong> random and block remove the <strong>same number</strong> of windows, so any difference between them comes from the <strong>shape</strong> of the deletion. Time-stamp deletion removes <strong>more</strong> windows, so part of its effect may come from the larger amount (shape and amount are not fully separated, which is listed as a limitation).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Random</th>
+<th>Block</th>
+<th>Time stamp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="zoom" href="../figures/flowcharts/10_random_window_deletion.png"><img loading="lazy" src="../figures/flowcharts/10_random_window_deletion.png" alt="" /></a></td>
+<td><a class="zoom" href="../figures/flowcharts/11_block_window_deletion.png"><img loading="lazy" src="../figures/flowcharts/11_block_window_deletion.png" alt="" /></a></td>
+<td><a class="zoom" href="../figures/flowcharts/12_timestamp_deletion.png"><img loading="lazy" src="../figures/flowcharts/12_timestamp_deletion.png" alt="" /></a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="36-size-of-the-splits-table-413-one-representative-request">3.6 Size of the splits (Table 4.13, one representative request) <a class="header-anchor" href="#36-size-of-the-splits-table-413-one-representative-request">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th style="text-align:right">Train</th>
+<th>Forget</th>
+<th style="text-align:right">Validation</th>
+<th style="text-align:right">Test</th>
+<th style="text-align:right">Held-out (attack)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SP500 / NASDAQ</td>
+<td style="text-align:right">2,567</td>
+<td>672 (26.2%)</td>
+<td style="text-align:right">211</td>
+<td style="text-align:right">213</td>
+<td style="text-align:right">540</td>
+</tr>
+<tr>
+<td>ETTh1 / ETTh2 (random, block)</td>
+<td style="text-align:right">1,487</td>
+<td>297 (20.0%)</td>
+<td style="text-align:right">673</td>
+<td style="text-align:right">673</td>
+<td style="text-align:right">584</td>
+</tr>
+<tr>
+<td>ETTh1 / ETTh2 (time stamp)</td>
+<td style="text-align:right">1,487</td>
+<td>502–527 (33.8–35.4%)</td>
+<td style="text-align:right">673</td>
+<td style="text-align:right">673</td>
+<td style="text-align:right">584</td>
+</tr>
+<tr>
+<td>ETTm1 / ETTm2 (random, block)</td>
+<td style="text-align:right">7,525</td>
+<td>1,505 (20.0%)</td>
+<td style="text-align:right">2,833</td>
+<td style="text-align:right">2,833</td>
+<td style="text-align:right">900</td>
+</tr>
+<tr>
+<td>ETTm1 / ETTm2 (time stamp)</td>
+<td style="text-align:right">7,525</td>
+<td>1,777–1,826 (23.6–24.3%)</td>
+<td style="text-align:right">2,833</td>
+<td style="text-align:right">2,833</td>
+<td style="text-align:right">900</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="37-how-much-unique-information-each-protocol-removes">3.7 How much <em>unique</em> information each protocol removes <a class="header-anchor" href="#37-how-much-unique-information-each-protocol-removes">#</a></h2>
+<p>This is measured later (Results, Finding 2), but it belongs with the protocols. &quot;Rows without support&quot; = raw time steps that were covered by deleted windows and by <strong>no</strong> kept window. These are the observations that are truly gone.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Raw time steps with no remaining support</th>
+<th>Windows deleted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ETT random</td>
+<td><strong>16–32</strong></td>
+<td>20%</td>
+</tr>
+<tr>
+<td>ETT block</td>
+<td>436–5,456</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>ETT time stamp</td>
+<td>1,820–6,928</td>
+<td>24–35%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Under random deletion, <strong>97.3–99.7% of the deleted windows are fully covered by kept neighbours</strong>. The nearest kept window is typically only <strong>4 steps</strong> away.</p>
+<figure><a class="zoom" href="../figures/flowcharts/46_unique_raw_support.png"><img loading="lazy" src="../figures/flowcharts/46_unique_raw_support.png" alt="Unique raw support analysis" /></a></figure>
+<hr />
+<h3 id="check-yourself">Check yourself <a class="header-anchor" href="#check-yourself">#</a></h3>
+<details><summary>Why fit the scaler on a public prefix instead of the whole training set?</summary>
+<p>If the scaler used the whole training era, its mean and variance would depend on the deleted data. A retrained model would then need a different scaler, and future information could leak. Fitting it on an early prefix that is never trained on and is outside the deletion scope avoids both problems.</p>
+</details>
+<details><summary>Random and block deletion remove the same 20% of windows. Why do they give such different results?</summary>
+<p>Because of overlap. A randomly deleted window almost always has kept neighbours that contain nearly the same observations, so the raw data is still in training (only 16–32 raw steps lose all support). A contiguous block removes whole stretches of time that no kept window covers (436–5,456 steps).</p>
+</details>
+<details><summary>Why is h = 9 for finance?</summary>
+<p>The 10-day moving-average feature needs 9 extra past days on top of the 30-day input window. Those days are part of each window's span, so they count in the dependency closure.</p>
+</details>
+
+  <nav class="prevnext" aria-label="Chapter navigation"><a class="pn prev" href="../docs/02_background_and_literature.html"><span>Previous</span>2. Background and literature</a><a class="pn next" href="../docs/04_models_and_training.html"><span>Next</span>4. Forecasting models, training regimes and the experiment grid</a></nav>
+  </main>
+  <footer class="foot">
+    <p>Study aid for the B.Sc. thesis at Brac University, October 2026. The thesis PDF is the authoritative source; every number here is copied from it.</p>
+  </footer>
+</div>
+</div>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p><button type="button" class="close">Close</button></dialog>
+<script type="module" src="../assets/site.js"></script>
+</body>
+</html>

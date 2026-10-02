@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluation metrics: how &quot;unlearning worked?&quot; is measured | CP-FIM thesis study guide</title>
+<meta name="description" content="Illustrated study guide for the BRAC University thesis on selective unlearning for temporal regression (CP-FIM).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%272%27 y=%274%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3Crect x=%277%27 y=%2712%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%232a78d6%27/%3E%3Crect x=%2712%27 y=%2720%27 width=%2718%27 height=%278%27 rx=%272%27 fill=%27%23b9d3f5%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},
+options:{ignoreHtmlClass:'mermaid'},chtml:{scale:0.98}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+<aside class="side" id="side">
+  <a class="brand" href="../index.html">CP-FIM thesis<br><span>study guide</span></a>
+  <nav aria-label="Chapters"><a class="side-home" href="../index.html">Overview</a><ol><li><a href="../docs/01_big_picture.html"><span class="n">1</span>The big picture</a></li><li><a href="../docs/02_background_and_literature.html"><span class="n">2</span>Background and literature</a></li><li><a href="../docs/03_data_and_deletion.html"><span class="n">3</span>Data and deletion requests</a></li><li><a href="../docs/04_models_and_training.html"><span class="n">4</span>Forecasting models, training regimes and the experiment grid</a></li><li><a href="../docs/05_cpfim_method.html"><span class="n">5</span>CP-FIM: the proposed method</a></li><li><a href="../docs/06_comparison_methods.html"><span class="n">6</span>Comparison methods, design alternatives and ablations</a></li><li><a href="../docs/07_evaluation_metrics.html" class="active" aria-current="page"><span class="n">7</span>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</a></li><li><a href="../docs/08_results.html"><span class="n">8</span>Results</a></li><li><a href="../docs/09_fixes_statistics_robustness.html"><span class="n">9</span>Issues found and fixed, statistics and robustness</a></li><li><a href="../docs/10_conclusion_and_impact.html"><span class="n">10</span>Conclusion, contributions, limitations, future work and impact</a></li><li><a href="../docs/11_cheat_sheet.html"><span class="n">11</span>Cheat sheet: every key number, formula and term on one page</a></li><li><a href="../docs/12_viva_questions.html"><span class="n">12</span>Viva / defence Q&amp;A</a></li><li><a href="../docs/13_figure_atlas.html"><span class="n">13</span>Figure atlas: every figure in this repository</a></li></ol></nav>
+  <div class="side-foot">
+    <button type="button" class="theme" id="theme" aria-pressed="false">Dark mode</button>
+    <a href="https://github.com/Tariq-15/temp111">Source on GitHub</a>
+  </div>
+</aside>
+<div class="main-wrap">
+  <div class="topbar">
+    <button type="button" class="menu" id="menu" aria-controls="side" aria-expanded="false">Chapters</button>
+    <a class="top-brand" href="../index.html">CP-FIM thesis study guide</a>
+  </div>
+  <main id="main" class="content">
+  <div class="strip"><svg class="windows" viewBox="-2 -2 656 123" role="navigation" aria-label="Chapters, drawn as overlapping sliding windows"><line class="axis" x1="0" y1="105" x2="652" y2="105"/><line class="tick" x1="0" y1="102" x2="0" y2="108"/><line class="tick" x1="22" y1="102" x2="22" y2="108"/><line class="tick" x1="44" y1="102" x2="44" y2="108"/><line class="tick" x1="66" y1="102" x2="66" y2="108"/><line class="tick" x1="88" y1="102" x2="88" y2="108"/><line class="tick" x1="110" y1="102" x2="110" y2="108"/><line class="tick" x1="132" y1="102" x2="132" y2="108"/><line class="tick" x1="154" y1="102" x2="154" y2="108"/><line class="tick" x1="176" y1="102" x2="176" y2="108"/><line class="tick" x1="198" y1="102" x2="198" y2="108"/><line class="tick" x1="220" y1="102" x2="220" y2="108"/><line class="tick" x1="242" y1="102" x2="242" y2="108"/><line class="tick" x1="264" y1="102" x2="264" y2="108"/><line class="tick" x1="286" y1="102" x2="286" y2="108"/><line class="tick" x1="308" y1="102" x2="308" y2="108"/><line class="tick" x1="330" y1="102" x2="330" y2="108"/><line class="tick" x1="352" y1="102" x2="352" y2="108"/><line class="tick" x1="374" y1="102" x2="374" y2="108"/><line class="tick" x1="396" y1="102" x2="396" y2="108"/><line class="tick" x1="418" y1="102" x2="418" y2="108"/><line class="tick" x1="440" y1="102" x2="440" y2="108"/><line class="tick" x1="462" y1="102" x2="462" y2="108"/><line class="tick" x1="484" y1="102" x2="484" y2="108"/><line class="tick" x1="506" y1="102" x2="506" y2="108"/><line class="tick" x1="528" y1="102" x2="528" y2="108"/><line class="tick" x1="550" y1="102" x2="550" y2="108"/><line class="tick" x1="572" y1="102" x2="572" y2="108"/><line class="tick" x1="594" y1="102" x2="594" y2="108"/><line class="tick" x1="616" y1="102" x2="616" y2="108"/><line class="tick" x1="638" y1="102" x2="638" y2="108"/><a href="01_big_picture.html" class="win done" aria-label="Chapter 1: The big picture"><title>1. The big picture</title><rect x="0" y="0" width="124" height="26" rx="6"/><text x="12" y="17.5">1<tspan class="lbl" dx="8">Big picture</tspan></text></a><a href="02_background_and_literature.html" class="win done" aria-label="Chapter 2: Background and literature"><title>2. Background and literature</title><rect x="44" y="33" width="124" height="26" rx="6"/><text x="56" y="50.5">2<tspan class="lbl" dx="8">Literature</tspan></text></a><a href="03_data_and_deletion.html" class="win done" aria-label="Chapter 3: Data and deletion requests"><title>3. Data and deletion requests</title><rect x="88" y="66" width="124" height="26" rx="6"/><text x="100" y="83.5">3<tspan class="lbl" dx="8">Data</tspan></text></a><a href="04_models_and_training.html" class="win done" aria-label="Chapter 4: Forecasting models, training regimes and the experiment grid"><title>4. Forecasting models, training regimes and the experiment grid</title><rect x="132" y="0" width="124" height="26" rx="6"/><text x="144" y="17.5">4<tspan class="lbl" dx="8">Models</tspan></text></a><a href="05_cpfim_method.html" class="win done" aria-label="Chapter 5: CP-FIM: the proposed method"><title>5. CP-FIM: the proposed method</title><rect x="176" y="33" width="124" height="26" rx="6"/><text x="188" y="50.5">5<tspan class="lbl" dx="8">CP-FIM</tspan></text></a><a href="06_comparison_methods.html" class="win done" aria-label="Chapter 6: Comparison methods, design alternatives and ablations"><title>6. Comparison methods, design alternatives and ablations</title><rect x="220" y="66" width="124" height="26" rx="6"/><text x="232" y="83.5">6<tspan class="lbl" dx="8">Methods</tspan></text></a><a href="07_evaluation_metrics.html" class="win current" aria-label="Chapter 7: Evaluation metrics: how &quot;unlearning worked?&quot; is measured" aria-current="page"><title>7. Evaluation metrics: how &quot;unlearning worked?&quot; is measured</title><rect x="264" y="0" width="124" height="26" rx="6"/><text x="276" y="17.5">7<tspan class="lbl" dx="8">Metrics</tspan></text></a><a href="08_results.html" class="win " aria-label="Chapter 8: Results"><title>8. Results</title><rect x="308" y="33" width="124" height="26" rx="6"/><text x="320" y="50.5">8<tspan class="lbl" dx="8">Results</tspan></text></a><a href="09_fixes_statistics_robustness.html" class="win " aria-label="Chapter 9: Issues found and fixed, statistics and robustness"><title>9. Issues found and fixed, statistics and robustness</title><rect x="352" y="66" width="124" height="26" rx="6"/><text x="364" y="83.5">9<tspan class="lbl" dx="8">Fixes, stats</tspan></text></a><a href="10_conclusion_and_impact.html" class="win " aria-label="Chapter 10: Conclusion, contributions, limitations, future work and impact"><title>10. Conclusion, contributions, limitations, future work and impact</title><rect x="396" y="0" width="124" height="26" rx="6"/><text x="408" y="17.5">10<tspan class="lbl" dx="8">Conclusion</tspan></text></a><a href="11_cheat_sheet.html" class="win " aria-label="Chapter 11: Cheat sheet: every key number, formula and term on one page"><title>11. Cheat sheet: every key number, formula and term on one page</title><rect x="440" y="33" width="124" height="26" rx="6"/><text x="452" y="50.5">11<tspan class="lbl" dx="8">Cheat sheet</tspan></text></a><a href="12_viva_questions.html" class="win " aria-label="Chapter 12: Viva / defence Q&amp;A"><title>12. Viva / defence Q&amp;A</title><rect x="484" y="66" width="124" height="26" rx="6"/><text x="496" y="83.5">12<tspan class="lbl" dx="8">Viva Q&amp;A</tspan></text></a><a href="13_figure_atlas.html" class="win " aria-label="Chapter 13: Figure atlas: every figure in this repository"><title>13. Figure atlas: every figure in this repository</title><rect x="528" y="0" width="124" height="26" rx="6"/><text x="540" y="17.5">13<tspan class="lbl" dx="8">Figures</tspan></text></a></svg></div><header class="chapter-head"><p class="chapter-num">Chapter 7 of 13</p><h1>Evaluation metrics: how &quot;unlearning worked?&quot; is measured</h1><p class="chapter-sub">Thesis Sections 4.7 and 5.1.1–5.1.2</p></header>
+  <figure><a class="zoom" href="../figures/thesis/methodology/35_evaluation_pipeline.png"><img loading="lazy" src="../figures/thesis/methodology/35_evaluation_pipeline.png" alt="Evaluation pipeline" /></a><figcaption>Thesis Fig 5.1. After each unlearning run: forecast skill (vs persistence), retrain-referenced deletion measures (disagreement, DSR, RNC), an exploratory membership signal, utility stability and cost.</figcaption></figure>
+<h2 id="the-three-reference-points">The three reference points <a class="header-anchor" href="#the-three-reference-points">#</a></h2>
+<p>Every number in the results is read against:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>What it is</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Oracle</strong> <span class="math">\(\theta_r\)</span></td>
+<td>retrained on <span class="math">\(D_r\)</span> (seed + 7000)</td>
+<td><strong>the target</strong></td>
+</tr>
+<tr>
+<td><strong>Original</strong> <span class="math">\(\theta_0\)</span></td>
+<td>doing nothing (M1)</td>
+<td><strong>the lower reference</strong></td>
+</tr>
+<tr>
+<td><strong>Retrain variation</strong></td>
+<td>disagreement between two oracles with different seeds</td>
+<td><strong>the natural noise floor</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="71-prediction-disagreement-the-core-measure">7.1 Prediction disagreement (the core measure) <a class="header-anchor" href="#71-prediction-disagreement-the-core-measure">#</a></h2>
+<p>For two models <span class="math">\(a\)</span>, <span class="math">\(b\)</span> and a data split <span class="math">\(X\)</span> (forget, retain or test), with <span class="math">\(m\)</span> predicted values per example:</p>
+<div class="math-block">\[\mathcal{D}_X(a, b) = \frac{1}{|X|}\sum_{x \in X} \frac{1}{m}\big\lVert f_a(x) - f_b(x) \big\rVert_2^2\]</div>
+<ul>
+<li>It compares <strong>forecasts, not weights</strong>: two networks can have very different weights and nearly the same forecasts.</li>
+<li><strong>Lower = closer to retraining.</strong> &quot;Distance to the retrained model&quot; in the figures means <span class="math">\(\mathcal{D}_f(\theta_u, \theta_r)\)</span> on the forget set.</li>
+<li><strong>Retrain variation</strong> = <span class="math">\(\mathcal{D}_X(\theta_r^{(a)}, \theta_r^{(b)})\)</span>, two oracles with different seeds.</li>
+</ul>
+<h2 id="72-deletion-signal-ratio-dsr-is-there-anything-to-forget">7.2 Deletion signal ratio (DSR): &quot;is there anything to forget?&quot; <a class="header-anchor" href="#72-deletion-signal-ratio-dsr-is-there-anything-to-forget">#</a></h2>
+<div class="math-block">\[\mathrm{DSR} = \frac{\mathcal{D}_f(\theta_0, \theta_r)}{\mathcal{D}_f(\theta_r^{(a)}, \theta_r^{(b)})}\]</div>
+<ul>
+<li><strong>DSR ≈ 1</strong>: deleting the data changes the model <strong>no more than changing the random seed</strong>. Any &quot;unlearning improvement&quot; is then hard to tell apart from noise.</li>
+<li><strong>DSR clearly &gt; 1</strong>: the deletion has a real effect that methods can try to reproduce.</li>
+</ul>
+<figure><a class="zoom" href="../figures/thesis/methodology/37_deletion_signal_ratio.png"><img loading="lazy" src="../figures/thesis/methodology/37_deletion_signal_ratio.png" alt="Computing DSR" /></a><figcaption>Thesis Fig 5.3.</figcaption></figure>
+<h2 id="73-retrain-normalised-closeness-rnc-how-much-of-the-gap-did-the-method-close">7.3 Retrain-normalised closeness (RNC): &quot;how much of the gap did the method close?&quot; <a class="header-anchor" href="#73-retrain-normalised-closeness-rnc-how-much-of-the-gap-did-the-method-close">#</a></h2>
+<div class="math-block">\[\mathrm{RNC}(U) = \frac{\mathcal{D}_f(\theta_0, \theta_r) - \mathcal{D}_f(\theta_u, \theta_r)}{\mathcal{D}_f(\theta_0, \theta_r) - \mathcal{D}_f(\theta_r^{(a)}, \theta_r^{(b)})}\]</div>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>RNC</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>no better than doing nothing</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>as close to the oracle as another retrain</td>
+</tr>
+<tr>
+<td><strong>&lt; 0</strong></td>
+<td>moved <strong>away</strong> from the oracle (over-forgetting)</td>
+</tr>
+</tbody>
+</table></div>
+<p>When the denominator is tiny (DSR near 1), RNC becomes unstable. That is why the main RNC table uses only the <strong>43 settings with DSR ≥ 1.5</strong>.</p>
+<figure><a class="zoom" href="../figures/thesis/methodology/38_retrain_normalised_closeness.png"><img loading="lazy" src="../figures/thesis/methodology/38_retrain_normalised_closeness.png" alt="Computing RNC" /></a><figcaption>Thesis Fig 5.12.</figcaption></figure>
+<div class="diagram"><pre class="mermaid">flowchart LR
+    O((&quot;Original θ₀&quot;)) --&gt;|&quot;gap = D_f(θ₀, θr)&quot;| R((&quot;Oracle θr&quot;))
+    R -.-|&quot;noise floor = D_f(θr_a, θr_b)&quot;| R2((&quot;2nd oracle&quot;))
+    U((&quot;Unlearned θu&quot;)) --&gt;|&quot;D_f(θu, θr)&quot;| R
+    note[&quot;RNC = how far along the gap θu moved&lt;br/&gt;DSR = gap ÷ noise floor&quot;]
+</pre></div>
+<h2 id="74-forecast-error-and-forecasting-skill">7.4 Forecast error and forecasting skill <a class="header-anchor" href="#74-forecast-error-and-forecasting-skill">#</a></h2>
+<div class="math-block">\[\mathrm{MSE} = \frac{1}{Nm}\sum_{i=1}^{N}\lVert\hat y_i - y_i\rVert_2^2, \qquad
+\mathrm{MAE} = \frac{1}{Nm}\sum|\hat y - y|, \qquad
+\mathrm{RMSE} = \sqrt{\mathrm{MSE}}\]</div>
+<p>These are computed separately on the <strong>forget</strong>, <strong>retain</strong> and <strong>test</strong> windows. MSE is the main scale.</p>
+<blockquote>
+<p>⚠️ <strong>Higher forget MSE alone does not mean better unlearning.</strong> A model can be much worse than retraining on the deleted windows (over-forgetting).</p>
+</blockquote>
+<p><strong>Persistence gate (forecast skill).</strong> Persistence = &quot;the next value equals the last value&quot;. The ratio <span class="math">\(\mathrm{MSE}_{\text{model}} / \mathrm{MSE}_{\text{persistence}}\)</span> is computed per asset in original units and then averaged. <strong>Below 1 = the model beats the naive forecast.</strong> This is a <em>prerequisite</em> for calling any unlearning result &quot;useful forecasting preserved&quot;.</p>
+<figure><a class="zoom" href="../figures/flowcharts/36_persistence_validity_gate.png"><img loading="lazy" src="../figures/flowcharts/36_persistence_validity_gate.png" alt="Persistence validity gate" /></a></figure>
+<h2 id="75-utility-stability-test-error-ratio">7.5 Utility stability (test-error ratio) <a class="header-anchor" href="#75-utility-stability-test-error-ratio">#</a></h2>
+<div class="math-block">\[\text{test-error ratio} = \frac{\mathrm{MSE}_{\text{test}}(\theta_u)}{\mathrm{MSE}_{\text{test}}(\theta_0)}\]</div>
+<p>1 = unchanged; 1.10 = 10% worse. Over all <strong>312 paired runs</strong> per method, the thesis counts how often the ratio is <strong>&gt; 1.10, &gt; 1.50 and &gt; 2.00</strong>, and reports the median, 95th percentile and worst case. <strong>A method is called &quot;stable&quot; if its test error never rises by more than 10%.</strong> (Objective O2.)</p>
+<figure><a class="zoom" href="../figures/flowcharts/40_utility_stability.png"><img loading="lazy" src="../figures/flowcharts/40_utility_stability.png" alt="Utility stability" /></a></figure>
+<h2 id="76-paired-wins">7.6 Paired wins <a class="header-anchor" href="#76-paired-wins">#</a></h2>
+<p>A <strong>paired win</strong> = method A has <strong>lower forget-set disagreement with the same oracle</strong> than method B, under the <strong>same</strong> dataset, architecture, regime, request and seed. Setting-level wins aggregate the paired runs (using the mean or median over runs). <strong>A win does not by itself show that either method forgets successfully.</strong> It is relative.</p>
+<h2 id="77-loss-based-membership-attack-auc-exploratory">7.7 Loss-based membership attack (AUC), exploratory <a class="header-anchor" href="#77-loss-based-membership-attack-auc-exploratory">#</a></h2>
+<ul>
+<li>Score per window = <strong>negative loss</strong> (averaged over its forecast values). Low loss → &quot;probably a training member&quot;.</li>
+<li>Forget windows vs <strong>held-out non-member windows</strong> (from the attack blocks), balanced within asset and calendar-year strata.</li>
+<li><strong>AUC</strong> = probability that a random forget window scores higher than a random non-member window.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>AUC</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≈ 0.5</td>
+<td>no separation <em>by this test</em></td>
+</tr>
+<tr>
+<td>≫ 0.5 (e.g. 0.97)</td>
+<td>forget windows clearly look like training data (memorised)</td>
+</tr>
+<tr>
+<td><strong>&lt; 0.5</strong></td>
+<td>forget windows have <strong>higher</strong> loss than unseen data, so they stand out (the <strong>Streisand effect</strong>). This is <strong>not</strong> privacy.</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>The test is <strong>weaker than LiRA</strong>, is sensitive to sample difficulty, and <strong>does not establish privacy or certified removal</strong>.</p>
+</blockquote>
+<figure><a class="zoom" href="../figures/flowcharts/39_loss_based_membership_diagnostic.png"><img loading="lazy" src="../figures/flowcharts/39_loss_based_membership_diagnostic.png" alt="Loss-based membership diagnostic" /></a></figure>
+<h2 id="78-cost">7.8 Cost <a class="header-anchor" href="#78-cost">#</a></h2>
+<p>Wall-clock seconds for the update; <strong>speed-up = retraining time ÷ method time</strong>. Equal update counts do <strong>not</strong> mean equal compute.</p>
+<h2 id="79-statistics">7.9 Statistics <a class="header-anchor" href="#79-statistics">#</a></h2>
+<ul>
+<li>Seeds 42, 43, 44 (oracle = seed + 7000); ETT also has 3 requests.</li>
+<li><strong>Paired</strong> comparisons (same seed and request).</li>
+<li><strong>Exploratory bootstrap intervals</strong> that resample seeds and requests (cluster bootstrap).</li>
+<li><strong>Sign tests</strong> for win counts, at several aggregation levels (runs, settings, datasets, architectures).</li>
+<li>Runs share original models, so they are <strong>not fully independent</strong>. Results are also reported at coarser levels.</li>
+</ul>
+<figure><a class="zoom" href="../figures/flowcharts/41_paired_statistics.png"><img loading="lazy" src="../figures/flowcharts/41_paired_statistics.png" alt="Paired statistics" /></a></figure>
+<h2 id="710-summary-questions-measures-and-good-results-table-51">7.10 Summary: questions, measures and good results (Table 5.1) <a class="header-anchor" href="#710-summary-questions-measures-and-good-results-table-51">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Measure</th>
+<th>Good result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Is the base model useful?</td>
+<td>test MSE / persistence MSE</td>
+<td><strong>below 1</strong></td>
+</tr>
+<tr>
+<td>Does the deletion matter?</td>
+<td>DSR</td>
+<td><strong>clearly above 1</strong></td>
+</tr>
+<tr>
+<td>Is the method close to retraining?</td>
+<td>disagreement with the oracle; RNC</td>
+<td>low disagreement; <strong>RNC near 1</strong></td>
+</tr>
+<tr>
+<td>Is the method stable?</td>
+<td>test MSE / original test MSE</td>
+<td><strong>close to 1 in every run</strong></td>
+</tr>
+<tr>
+<td>Does a membership test see the deleted data?</td>
+<td>loss-attack AUC</td>
+<td><strong>close to the oracle's AUC</strong></td>
+</tr>
+<tr>
+<td>Is the method cheap?</td>
+<td>speed-up over retraining</td>
+<td><strong>clearly above 1</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="all-measures-table-419">All measures (Table 4.19) <a class="header-anchor" href="#all-measures-table-419">#</a></h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Forget / retain / test MSE</td>
+<td>forecast error on deleted, kept and future data</td>
+</tr>
+<tr>
+<td>Disagreement <span class="math">\(\mathcal{D}(\text{method}, \text{oracle})\)</span></td>
+<td>mean squared forecast difference; lower = closer to retraining</td>
+</tr>
+<tr>
+<td>Retrain variation</td>
+<td>disagreement between two oracles (natural randomness)</td>
+</tr>
+<tr>
+<td>DSR</td>
+<td>deletion effect relative to a new seed</td>
+</tr>
+<tr>
+<td>RNC</td>
+<td>fraction of the original-to-oracle gap a method closes</td>
+</tr>
+<tr>
+<td>Win count</td>
+<td>settings/runs where CP-FIM is closer to the oracle than another method</td>
+</tr>
+<tr>
+<td>Test-error ratio</td>
+<td>test MSE after / original test MSE (stability)</td>
+</tr>
+<tr>
+<td>Loss-attack AUC</td>
+<td>how well a loss threshold separates forget from held-out windows (0.5 = none); exploratory</td>
+</tr>
+<tr>
+<td>Relative MSE vs persistence</td>
+<td>test MSE / &quot;tomorrow equals today&quot; MSE; &gt; 1 = worse than naive</td>
+</tr>
+<tr>
+<td>Time and speed-up</td>
+<td>wall-clock time; retraining time ÷ method time</td>
+</tr>
+</tbody>
+</table></div>
+
+  <nav class="prevnext" aria-label="Chapter navigation"><a class="pn prev" href="../docs/06_comparison_methods.html"><span>Previous</span>6. Comparison methods, design alternatives and ablations</a><a class="pn next" href="../docs/08_results.html"><span>Next</span>8. Results</a></nav>
+  </main>
+  <footer class="foot">
+    <p>Study aid for the B.Sc. thesis at Brac University, October 2026. The thesis PDF is the authoritative source; every number here is copied from it.</p>
+  </footer>
+</div>
+</div>
+<dialog id="zoom" aria-label="Enlarged figure"><img alt=""><p></p><button type="button" class="close">Close</button></dialog>
+<script type="module" src="../assets/site.js"></script>
+</body>
+</html>
